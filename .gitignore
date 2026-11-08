@@ -1,0 +1,17 @@
+# Local dependencies and tooling
+node_modules/
+.venv/
+__pycache__/
+*.log
+coverage/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
