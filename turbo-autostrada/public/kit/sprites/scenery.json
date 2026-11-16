@@ -1,0 +1,234 @@
+{
+ "frames": {
+  "winners/podium-winners": {
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 560,
+    "h": 400
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 560,
+    "h": 400
+   },
+   "sourceSize": {
+    "w": 560,
+    "h": 400
+   }
+  },
+  "scenery/building": {
+   "frame": {
+    "x": 564,
+    "y": 0,
+    "w": 113,
+    "h": 295
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 42,
+    "y": 17,
+    "w": 113,
+    "h": 295
+   },
+   "sourceSize": {
+    "w": 200,
+    "h": 320
+   }
+  },
+  "winners/podium": {
+   "frame": {
+    "x": 681,
+    "y": 0,
+    "w": 440,
+    "h": 293
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 20,
+    "y": 0,
+    "w": 440,
+    "h": 293
+   },
+   "sourceSize": {
+    "w": 480,
+    "h": 300
+   }
+  },
+  "scenery/street-lamp": {
+   "frame": {
+    "x": 1125,
+    "y": 0,
+    "w": 240,
+    "h": 286
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 14,
+    "w": 240,
+    "h": 286
+   },
+   "sourceSize": {
+    "w": 240,
+    "h": 320
+   }
+  },
+  "scenery/gate-start": {
+   "frame": {
+    "x": 1369,
+    "y": 0,
+    "w": 321,
+    "h": 273
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 25,
+    "y": 14,
+    "w": 321,
+    "h": 273
+   },
+   "sourceSize": {
+    "w": 360,
+    "h": 300
+   }
+  },
+  "scenery/gate-finish": {
+   "frame": {
+    "x": 1694,
+    "y": 0,
+    "w": 321,
+    "h": 273
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 25,
+    "y": 14,
+    "w": 321,
+    "h": 273
+   },
+   "sourceSize": {
+    "w": 360,
+    "h": 300
+   }
+  },
+  "scenery/distance-gantry": {
+   "frame": {
+    "x": 0,
+    "y": 404,
+    "w": 294,
+    "h": 259
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 16,
+    "y": 19,
+    "w": 294,
+    "h": 259
+   },
+   "sourceSize": {
+    "w": 320,
+    "h": 300
+   }
+  },
+  "scenery/billboard": {
+   "frame": {
+    "x": 298,
+    "y": 404,
+    "w": 168,
+    "h": 234
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 77,
+    "y": 11,
+    "w": 168,
+    "h": 234
+   },
+   "sourceSize": {
+    "w": 320,
+    "h": 260
+   }
+  },
+  "scenery/tree": {
+   "frame": {
+    "x": 470,
+    "y": 404,
+    "w": 149,
+    "h": 227
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 25,
+    "y": 21,
+    "w": 149,
+    "h": 227
+   },
+   "sourceSize": {
+    "w": 200,
+    "h": 280
+   }
+  },
+  "scenery/tunnel": {
+   "frame": {
+    "x": 623,
+    "y": 404,
+    "w": 257,
+    "h": 173
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 12,
+    "y": 64,
+    "w": 257,
+    "h": 173
+   },
+   "sourceSize": {
+    "w": 320,
+    "h": 260
+   }
+  },
+  "scenery/bridge": {
+   "frame": {
+    "x": 884,
+    "y": 404,
+    "w": 444,
+    "h": 100
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 36,
+    "y": 47,
+    "w": 444,
+    "h": 100
+   },
+   "sourceSize": {
+    "w": 480,
+    "h": 200
+   }
+  }
+ },
+ "meta": {
+  "app": "TURBOSTRADA kit",
+  "image": "scenery.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 2048,
+   "h": 663
+  },
+  "scale": "1"
+ }
+}

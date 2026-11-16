@@ -1,0 +1,8 @@
+{
+  "tiktokUsername": "",
+  "port": 3002,
+  "mode": "challenge",
+  "lockMode": true,
+  "language": "ro",
+  "moderators": []
+}

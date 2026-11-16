@@ -1,0 +1,9 @@
+{
+  "tiktokUsername": "",
+  "signApiKey": "",
+  "port": 3000,
+  "language": "ro",
+  "mode": "classic",
+  "moderators": [],
+  "panelPassword": "CHANGE_ME_BEFORE_SHARING"
+}

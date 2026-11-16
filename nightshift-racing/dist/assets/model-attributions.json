@@ -1,0 +1,41 @@
+[
+  {
+    "file": "bugatti.glb",
+    "name": "2023 Bugatti Chiron Profilee",
+    "author": "DisneyCars",
+    "authorUrl": "https://sketchfab.com/supercarmodels",
+    "license": "CC Attribution",
+    "sourceName": "2023 Bugatti Chiron Profilee",
+    "sourceUrl": "https://sketchfab.com/3d-models/6da5092ee455446cb050e4c6b4a3ac05",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "distribution": "https://github.com/pedrosoandre/carros",
+    "changes": "Source distribution optimised/compressed geometry. NIGHTSHIFT centres and scales each model, changes paint to matte, darkens windows and animates wheels at runtime.",
+    "sha256": "2d73cf6197a785367076d02aef5bf8e1ebc583d6e9085e83887f32c2765ba508"
+  },
+  {
+    "file": "lamborghini.glb",
+    "name": "Lamborghini Aventador SVJ SDC ( FREE )",
+    "author": "SDC PERFORMANCE™️",
+    "authorUrl": "https://sketchfab.com/Lambo_SC04",
+    "license": "CC Attribution",
+    "sourceName": "Lamborghini Aventador SVJ SDC ( FREE )",
+    "sourceUrl": "https://sketchfab.com/3d-models/none-784e4656aca649cca55d6b18740a19b2",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "distribution": "https://github.com/pedrosoandre/carros",
+    "changes": "Source distribution optimised/compressed geometry. NIGHTSHIFT centres and scales each model, changes paint to matte, darkens windows and animates wheels at runtime.",
+    "sha256": "7a1fc810fe346ae1cee21c6f37ecb23bf4ae28a8f989f13e11eb371672262062"
+  },
+  {
+    "file": "porsche.glb",
+    "name": "Porsche 911 GT3",
+    "author": "ChevroletSS",
+    "authorUrl": "https://sketchfab.com/ChevroletSS",
+    "license": "CC Attribution",
+    "sourceName": "Porsche 911 GT3",
+    "sourceUrl": "https://sketchfab.com/3d-models/none-78d5c47ab2554c2592b7e499179a0792",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "distribution": "https://github.com/pedrosoandre/carros",
+    "changes": "Source distribution optimised/compressed geometry. NIGHTSHIFT centres and scales each model, changes paint to matte, darkens windows and animates wheels at runtime.",
+    "sha256": "4058dc7aa3c2ad27f230c1ac77fe4bc253930aeacffeab48371360c557456718"
+  }
+]

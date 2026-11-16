@@ -1,0 +1,154 @@
+{
+ "frames": {
+  "badges/badge-rank-1": {
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 254,
+    "h": 284
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 1,
+    "y": 0,
+    "w": 254,
+    "h": 284
+   },
+   "sourceSize": {
+    "w": 256,
+    "h": 300
+   }
+  },
+  "badges/badge-rank-2": {
+   "frame": {
+    "x": 258,
+    "y": 0,
+    "w": 254,
+    "h": 284
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 1,
+    "y": 0,
+    "w": 254,
+    "h": 284
+   },
+   "sourceSize": {
+    "w": 256,
+    "h": 300
+   }
+  },
+  "badges/badge-rank-3": {
+   "frame": {
+    "x": 516,
+    "y": 0,
+    "w": 254,
+    "h": 284
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 1,
+    "y": 0,
+    "w": 254,
+    "h": 284
+   },
+   "sourceSize": {
+    "w": 256,
+    "h": 300
+   }
+  },
+  "badges/badge-normal": {
+   "frame": {
+    "x": 774,
+    "y": 0,
+    "w": 220,
+    "h": 278
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 18,
+    "y": 6,
+    "w": 220,
+    "h": 278
+   },
+   "sourceSize": {
+    "w": 256,
+    "h": 300
+   }
+  },
+  "badges/badge-challenge-bib": {
+   "frame": {
+    "x": 998,
+    "y": 0,
+    "w": 220,
+    "h": 278
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 18,
+    "y": 6,
+    "w": 220,
+    "h": 278
+   },
+   "sourceSize": {
+    "w": 256,
+    "h": 300
+   }
+  },
+  "badges/badge-team-red": {
+   "frame": {
+    "x": 1222,
+    "y": 0,
+    "w": 246,
+    "h": 278
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 5,
+    "y": 6,
+    "w": 246,
+    "h": 278
+   },
+   "sourceSize": {
+    "w": 256,
+    "h": 300
+   }
+  },
+  "badges/badge-team-blue": {
+   "frame": {
+    "x": 1472,
+    "y": 0,
+    "w": 246,
+    "h": 278
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 5,
+    "y": 6,
+    "w": 246,
+    "h": 278
+   },
+   "sourceSize": {
+    "w": 256,
+    "h": 300
+   }
+  }
+ },
+ "meta": {
+  "app": "TURBOSTRADA kit",
+  "image": "badges.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 2048,
+   "h": 284
+  },
+  "scale": "1"
+ }
+}

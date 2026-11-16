@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <meta name="theme-color" content="#11182a"><title>Echo Rescue — GAME</title>
+  <link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/play.css"><link rel="stylesheet" href="/course.css">
+  <script type="importmap">{"imports":{"three":"/vendor/three.module.js","three/addons/":"/vendor/addons/"}}</script>
+</head>
+<body>
+  <svg class="icons" aria-hidden="true"><defs>
+    <symbol id="cube" viewBox="0 0 32 32"><path d="m16 3 12 7v13l-12 7-12-7V10l12-7Zm0 14 12-7M16 17 4 10m12 7v13M10 6l12 7"/></symbol>
+    <symbol id="pulse" viewBox="0 0 32 32"><circle cx="16" cy="17" r="10"/><path d="M16 25V6m-6 5 6-6 6 6M3 28h26"/></symbol>
+    <symbol id="shield" viewBox="0 0 32 32"><path d="m16 3 11 4v9c0 6-6 11-11 14C11 27 5 22 5 16V7l11-4Zm-5 13 4 4 7-8"/></symbol>
+    <symbol id="boost" viewBox="0 0 32 32"><path d="M18 2 6 18h9l-1 12 12-17h-9l1-11Z"/></symbol>
+  </defs></svg>
+  <main class="game-shell" id="gameShell" aria-label="Echo Rescue live game">
+    <canvas id="gameCanvas" aria-label="3D robot rescue game"></canvas>
+    <div class="shade-top"></div><div class="shade-bottom"></div>
+    <div class="game-hud" id="gameHud">
+      <div class="broadcast-status"><span id="playMode">CONNECTING</span><span id="rescues">0 RESCUES</span></div>
+      <div class="game-logo"><span>ECHO</span> RESCUE<small>YOU CONTROL THE WORLD</small></div>
+      <div class="level-name" id="levelName">WORLD 1 · MOSS CIRCUIT</div>
+      <div class="round-hud"><div class="round-stat"><small>LOOP</small><strong id="loop">01</strong></div><div class="clock"><small>TIME LEFT</small><strong id="clock">95</strong></div><div class="round-stat heart-stat"><small>HEARTS</small><strong id="hearts">♥♥♥♡♡</strong><em id="lifeReserve"></em></div></div>
+      <div class="mission"><span>◆ <b id="shards">0/3</b></span><span id="objective">GET E-07 TO THE PORTAL!</span><span id="stars">⬡ 0/14</span></div><div class="route-status"><span id="distance">ROUTE 0%</span><span id="buffs">CHECKPOINT 0/4</span><div class="route-track"><i id="routeFill"></i></div></div>
+    </div>
+    <div class="bot-bubble" id="botBubble" hidden>I need a bridge!</div>
+    <div class="gift-shout" id="giftShout" hidden><span id="shoutIcon">✦</span><div><small id="shoutViewer"></small><strong id="shoutAction"></strong></div></div>
+    <div class="echo-reminder"><span>↺</span><div><strong id="echoLabel">EVERY GIFT HAPPENS TWICE</strong><small id="echoSub">Your help returns next loop!</small></div></div>
+    <div class="team-taps"><button id="tapButton" aria-label="Simulate 20 likes"><span>♥</span><div><strong>TAP FOR A TEAM JUMP</strong><small>100 LIKES = FREE GRAVITY PULSE</small></div><b id="tapValue">0%</b></button><div class="tap-track"><div id="tapFill"></div></div></div>
+    <div class="gift-powers" aria-label="Viewer gifts">
+      <button class="power cube-power" data-effect="cube" aria-label="Test drop cube"><span class="power-icon"><svg><use href="#cube"/></svg></span><strong>BRIDGE</strong><small data-gift="cube">ROSE</small></button>
+      <button class="power heal-power" data-effect="heal" aria-label="Test life"><span class="power-icon life-icon">♥</span><strong>LIFE</strong><small data-gift="heal">HEART</small></button>
+      <button class="power pulse-power" data-effect="pulse" aria-label="Test gravity pulse"><span class="power-icon"><svg><use href="#pulse"/></svg></span><strong>JUMP</strong><small data-gift="pulse">FINGER HEART</small></button>
+      <button class="power shield-power" data-effect="shield" aria-label="Test shield"><span class="power-icon"><svg><use href="#shield"/></svg></span><strong>SHIELD</strong><small data-gift="shield">HAND HEARTS</small></button>
+      <button class="power boost-power" data-effect="boost" aria-label="Test overdrive"><span class="power-icon"><svg><use href="#boost"/></svg></span><strong>BOOST</strong><small data-gift="boost">GG</small></button>
+    </div>
+    <div class="loop-memory"><div><b>NOW</b><span id="nowLane"></span></div><div><b>↺ ECHO</b><span id="echoLane"></span></div></div>
+    <div class="game-message" id="gameMessage" hidden></div>
+    <div class="round-result" id="roundResult" hidden><span id="resultIcon">↺</span><h1 id="resultTitle">REWIND!</h1><p id="resultNote">Your gifts are coming back.</p><b id="resultStars"></b></div>
+    <div class="map-hud" id="mapHud" hidden><small>THE WARP MAP</small><h1>NEXT ADVENTURE</h1><strong id="mapWorld">GLACIER RELAY</strong><div id="mapNodes"></div><div class="map-countdown"><b id="warpCount">3</b><span id="warpNote">WARP DRIVE CHARGING</span></div></div>
+    <div class="host-dock"><button id="menuButton" aria-label="Game menu">☰</button><button id="soundButton" aria-label="Enable game sound">♫</button></div>
+    <div class="game-menu" id="gameMenu" hidden><h1>ECHO RESCUE</h1><button id="continueButton">CONTINUE GAME</button><button id="pauseButton">PAUSE / RESUME</button><button id="mapButton">WARP MAP</button><button id="fullscreenButton">FULLSCREEN</button><button id="hostButton">HOST CONTROLS ↗</button><small>1–5 EFFECTS · SPACE PAUSE · H HOST · F FULLSCREEN</small></div>
+  </main>
+  <script type="module" src="/play.js"></script>
+</body>
+</html>

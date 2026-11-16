@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171a19">
+  <meta name="description" content="A community-built dream car. Tune it, test it, and build your garage together.">
+  <title>Dream Garage — Built together. Driven after dark.</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23191d1b'/%3E%3Cpath d='M12 40l6-17h28l6 17v8h-8v-6H20v6h-8zm10-12l-3 9h26l-3-9z' fill='%23c7e78c'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./expansion.css">
+  <script type="importmap">{"imports":{"three":"/vendor/three/three.module.js","three/addons/":"/vendor/addons/"}}</script>
+</head>
+<body>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <symbol id="i-car" viewBox="0 0 24 24"><path d="m4 10 2-6h12l2 6m-16 0h16l1 3v6h-3v-3H6v3H3v-6zM6 12h2m8 0h2"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+      <symbol id="i-paint" viewBox="0 0 24 24"><path d="m7 4 10 10-7 7-9-9zM4 2l9 9m6-2s-3 4-3 6a3 3 0 0 0 6 0c0-2-3-6-3-6ZM3 14h13"/></symbol>
+      <symbol id="i-wheel" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/><path d="m12 7 0 4m5 1h-4m-1 5v-4m-5-1h4"/></symbol>
+      <symbol id="i-aero" viewBox="0 0 24 24"><path d="M2 6h20v4H2zm5 4 1 8m9-8-1 8M5 18h14"/></symbol>
+      <symbol id="i-spring" viewBox="0 0 24 24"><path d="M9 2h6m-3 0v3m-5 1 10 3-10 3 10 3-10 3m5 1v3m-3 0h6"/></symbol>
+      <symbol id="i-turbo" viewBox="0 0 24 24"><path d="M14 3h7v6h-5M9 4a8 8 0 1 0 10 10v-3h-7v4h3a4 4 0 1 1-4-7h3V3"/><circle cx="10" cy="13" r="1"/></symbol>
+      <symbol id="i-bottle" viewBox="0 0 24 24"><path d="M9 2h6m-5 0v4L7 9v11a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9l-3-3V2M7 12h10m-10 6h10"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 24 24"><path d="m13 2-9 12h7l-1 8 10-13h-7z"/></symbol>
+      <symbol id="i-tool" viewBox="0 0 24 24"><path d="M5 8V5h14v3m-9-3V2h4v3M2 8h20v13H2zm0 5h20m-12-2v4h4v-4"/></symbol>
+      <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M8 16s-2-6 3-11c3-3 9-3 9-3s0 6-3 9c-5 5-11 3-11 3m2-4-5 1-2 5h5m8-2-1 5-5 2v-5m-3 1-2 4 4-2"/><circle cx="15" cy="7" r="2"/></symbol>
+      <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 22V3m0 1c5-5 9 5 15 0v11c-6 5-10-5-15 0m5-11v11m5-9v11M5 9c5-5 9 5 15 0"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><path d="M3 3h7v7H3zm11 0h7v7h-7zM3 14h7v7H3zm11 0h7v7h-7z"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+      <symbol id="i-orbit" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="10" ry="5"/><path d="m18 3 2 5-5 1"/><circle cx="12" cy="12" r="2"/></symbol>
+      <symbol id="i-volume" viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9zm13-2a7 7 0 0 1 0 10m3-13a11 11 0 0 1 0 16"/></symbol>
+      <symbol id="i-save" viewBox="0 0 24 24"><path d="M3 3h15l3 3v15H3zm4 0v7h10V3M7 21v-7h10v7"/></symbol>
+      <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4M1 12h4m14 0h4"/></symbol>
+      <symbol id="i-screen" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/></symbol>
+    </defs>
+  </svg>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Dream Garage home"><span class="brand-mark"><svg class="icon"><use href="#i-car"/></svg></span><span>DREAM<span class="brand-light">GARAGE</span><small>BUILT TOGETHER. DRIVEN AFTER DARK.</small></span></a>
+      <nav class="main-nav" aria-label="Garage navigation">
+        <button class="nav-button active" id="nav-garage"><svg class="icon"><use href="#i-tool"/></svg>Workshop</button>
+        <button class="nav-button" id="nav-showroom"><svg class="icon"><use href="#i-grid"/></svg>Showroom <span id="collection-count">0</span></button>
+      </nav>
+      <div class="header-right"><span class="simulation-badge"><i></i> GIFT SIMULATOR</span><div class="wallet"><span class="credit-symbol">₡</span><div><small>WORKSHOP CREDITS</small><strong id="credits">2,600</strong></div></div></div>
+    </header>
+    <div class="workspace">
+      <aside class="build-panel">
+        <div class="section-kicker">YOUR CURRENT PROJECT <span>01</span></div>
+        <div class="project-heading"><span id="car-brand">KAZE MOTOR WORKS</span><h1 id="car-name">Kaze KS-92</h1><p id="car-meta">1992 / Japanese street coupe</p></div>
+        <div class="class-row"><span class="class-tag" id="car-class">C</span><span id="car-drive">RWD</span><span id="build-status">STREET BUILD</span></div>
+        <div class="spec-hero"><div><strong id="horsepower">205</strong><span>HORSEPOWER</span></div><div><strong id="weight">1,260</strong><span>WEIGHT / KG</span></div></div>
+        <div class="stat-block" id="stat-bars"></div>
+        <div class="build-progress"><div><span>Build progress</span><strong id="build-percent">0 / 6</strong></div><div class="progress-track"><i id="build-bar"></i></div><small>Upgrade all six categories to complete a build.</small></div>
+        <div class="installed-summary" id="installed-summary"></div>
+        <div class="project-actions"><button class="button primary" id="test-run"><svg class="icon"><use href="#i-flag"/></svg>TEST DRIVE <svg class="icon arrow"><use href="#i-arrow"/></svg></button><p class="run-reward">400 m sprint <span>Earn ₡ 400 / run</span></p><button class="button secondary" id="save-build"><svg class="icon"><use href="#i-save"/></svg>Save to showroom</button><button class="text-button" id="switch-car">Choose another car <span>↗</span></button></div>
+        <div class="garage-value"><span>PROJECT VALUE</span><strong id="project-value">₡ 2,000</strong><small>Fictional game credits</small></div>
+      </aside>
+      <main class="main-column">
+        <section class="garage-stage" aria-label="3D tuning garage">
+          <div id="scene"></div>
+          <div class="bay-heading"><div class="eyebrow"><i></i> BAY 01 <span>/ COMMUNITY PROJECT</span></div><h2>THE NIGHT<br><span>SHIFT.</span></h2><p>One garage. Everyone's vision.</p></div>
+          <div class="stage-label"><span class="tiny-cross">+</span><span>BUILD NO. <b id="build-number">001</b></span><span class="stage-line"></span><span>EST. 2026</span></div>
+          <div class="scene-loading" id="scene-loading"><span class="loading-ring"></span>Opening the workshop…</div>
+          <div class="view-controls" aria-label="Camera views"><button class="view-button active" data-view="hero">3/4</button><button class="view-button" data-view="front">FRONT</button><button class="view-button" data-view="rear">REAR</button><button class="view-button" data-view="engine">ENGINE</button></div>
+          <div class="stage-bottom"><div class="orbit-hint"><svg class="icon"><use href="#i-orbit"/></svg><span>DRAG TO ROTATE <b>·</b> SCROLL TO ZOOM</span></div><div class="stage-tools"><button class="icon-button" id="auto-rotate" aria-label="Toggle turntable" aria-pressed="false" title="Auto rotate"><svg class="icon"><use href="#i-orbit"/></svg></button><button class="icon-button" id="sound" aria-label="Enable engine sound" aria-pressed="false" title="Toggle engine sound"><svg class="icon"><use href="#i-volume"/></svg><span class="sound-off">/</span></button><button class="icon-button" id="stream-view" aria-label="Open vertical stream preview" title="Vertical stream preview"><svg class="icon"><use href="#i-screen"/></svg></button></div></div>
+          <div class="part-notice" id="part-notice" role="status"></div>
+          <div class="run-hud" id="run-hud" hidden><div class="run-top"><span>400 M / CLOSED COURSE</span><b id="run-time">0.00 s</b></div><div class="run-meter"><i id="run-progress"></i></div><div class="speed-readout"><strong id="run-speed">0</strong><span>KM/H</span></div><div class="run-bottom"><span id="run-distance">0 / 400 M</span><span id="run-traction">LAUNCH CONTROL</span></div><button id="boost" class="button primary">NITROUS <span>HOLD SPACE</span></button></div>
+          <div class="overlay-info"><span id="overlay-model">KAZE KS-92</span><strong id="overlay-hp">205 <small>HP</small></strong><span id="overlay-goal">NEXT: STAGE 1 TURBO</span><div class="overlay-gifts">SPARK +100 <b>·</b> TOOLBOX +500 <b>·</b> ROCKET +1,500</div><small>SIMULATED EVENTS / GAME CREDITS</small></div>
+        </section>
+        <section class="tuning-panel" aria-label="Parts shop"><div class="tuning-top"><h2>MAKE IT YOURS<span>THE PARTS SHOP</span></h2><span class="owned-hint"><i></i> Purchased parts stay yours</span></div><div class="category-tabs" id="category-tabs" role="tablist" aria-label="Upgrade categories"></div><div class="shop-description"><p id="category-description"></p><span id="category-level"></span></div><div class="paint-colors" id="paint-colors" hidden></div><div class="parts-grid" id="parts-grid" role="tabpanel"></div></section>
+      </main>
+      <aside class="community-panel">
+        <div class="community-title"><span class="eyebrow">THE COMMUNITY BUILDS IT</span><h2>A little help.<br>A lot of horsepower.</h2><p>Send a test gift. Shape the next upgrade.</p></div>
+        <section class="goal-card"><div class="section-kicker"><svg class="icon"><use href="#i-target"/></svg> NEXT ON THE BUILD</div><div class="goal-part"><span class="goal-icon"><svg class="icon"><use href="#i-turbo"/></svg></span><div><h3 id="goal-name">Stage 1 turbo</h3><span id="goal-spec">+85 HP</span></div></div><div class="goal-numbers"><strong id="goal-funded">2,000</strong><span>/ <span id="goal-cost">2,000</span> ₡</span><b id="goal-percent">100%</b></div><div class="progress-track"><i id="goal-bar"></i></div><button class="button goal-button" id="install-goal">INSTALL UPGRADE <svg class="icon"><use href="#i-arrow"/></svg></button><label class="toggle-label"><input type="checkbox" id="auto-install"><span class="toggle"></span>Auto install when funded</label></section>
+        <section class="gift-simulator"><div class="section-kicker">SEND A TEST GIFT <span>SIMULATION</span></div><label class="viewer-label" for="viewer-name">Viewer name</label><input id="viewer-name" class="text-input" value="GuestDriver" maxlength="24" autocomplete="off"><div class="gift-buttons" id="gift-buttons"></div><p class="sim-note">Test buttons only. No real gifts or money.<br>Amounts are fictional workshop credits.</p></section>
+        <section class="activity-section"><div class="section-kicker">WORKSHOP ACTIVITY <span id="gift-count">0 GIFTS</span></div><div class="activity-feed" id="activity-feed" aria-live="polite" aria-relevant="additions"></div></section>
+        <section class="contributors-section"><div class="section-kicker">BUILD CREW <svg class="icon"><use href="#i-spark"/></svg></div><div id="contributors"></div></section>
+        <div class="local-save"><i></i><span id="save-status">Garage saved on this browser</span><svg class="icon"><use href="#i-check"/></svg></div>
+      </aside>
+    </div>
+    <footer class="footer"><span>DREAM GARAGE <b>/</b> COMMUNITY CAR CULTURE</span><span>LOCAL PROTOTYPE <b>·</b> REAL LIVE EVENTS NOT CONNECTED</span><button class="text-button" id="how-it-works">How it works <span>↗</span></button></footer>
+  </div>
+  <dialog id="modal"><div id="modal-content"></div></dialog>
+  <div class="toast" id="toast" role="status"></div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

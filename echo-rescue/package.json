@@ -1,0 +1,12 @@
+{
+  "name": "echo-rescue",
+  "version": "4.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A Three.js autopilot adventure across five floating worlds. Every viewer gift returns once as an echo.",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": { "node": ">=22" }
+}

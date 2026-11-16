@@ -1,0 +1,354 @@
+{
+ "frames": {
+  "obstacles/obstacle-slide": {
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 267,
+    "h": 248
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 40,
+    "y": 47,
+    "w": 267,
+    "h": 248
+   },
+   "sourceSize": {
+    "w": 320,
+    "h": 320
+   }
+  },
+  "items/meteor": {
+   "frame": {
+    "x": 271,
+    "y": 0,
+    "w": 161,
+    "h": 210
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 25,
+    "y": 28,
+    "w": 161,
+    "h": 210
+   },
+   "sourceSize": {
+    "w": 200,
+    "h": 280
+   }
+  },
+  "obstacles/obstacle-jump": {
+   "frame": {
+    "x": 436,
+    "y": 0,
+    "w": 261,
+    "h": 177
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 42,
+    "y": 79,
+    "w": 261,
+    "h": 177
+   },
+   "sourceSize": {
+    "w": 320,
+    "h": 320
+   }
+  },
+  "obstacles/obstacle-cones": {
+   "frame": {
+    "x": 701,
+    "y": 0,
+    "w": 271,
+    "h": 159
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 32,
+    "y": 97,
+    "w": 271,
+    "h": 159
+   },
+   "sourceSize": {
+    "w": 320,
+    "h": 320
+   }
+  },
+  "obstacles/obstacle-wall": {
+   "frame": {
+    "x": 976,
+    "y": 0,
+    "w": 263,
+    "h": 154
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 41,
+    "y": 100,
+    "w": 263,
+    "h": 154
+   },
+   "sourceSize": {
+    "w": 320,
+    "h": 320
+   }
+  },
+  "cars/car-traffic": {
+   "frame": {
+    "x": 1243,
+    "y": 0,
+    "w": 252,
+    "h": 150
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 22,
+    "y": 48,
+    "w": 252,
+    "h": 150
+   },
+   "sourceSize": {
+    "w": 280,
+    "h": 220
+   }
+  },
+  "items/coin": {
+   "frame": {
+    "x": 1499,
+    "y": 0,
+    "w": 123,
+    "h": 132
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 14,
+    "y": 13,
+    "w": 123,
+    "h": 132
+   },
+   "sourceSize": {
+    "w": 160,
+    "h": 160
+   }
+  },
+  "cars/car-broken-e63946": {
+   "frame": {
+    "x": 1626,
+    "y": 0,
+    "w": 216,
+    "h": 110
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 29,
+    "y": 61,
+    "w": 216,
+    "h": 110
+   },
+   "sourceSize": {
+    "w": 280,
+    "h": 220
+   }
+  },
+  "cars/car-broken-1d4ed8": {
+   "frame": {
+    "x": 0,
+    "y": 252,
+    "w": 216,
+    "h": 110
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 29,
+    "y": 61,
+    "w": 216,
+    "h": 110
+   },
+   "sourceSize": {
+    "w": 280,
+    "h": 220
+   }
+  },
+  "cars/car-broken-f4f4f5": {
+   "frame": {
+    "x": 220,
+    "y": 252,
+    "w": 216,
+    "h": 110
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 29,
+    "y": 61,
+    "w": 216,
+    "h": 110
+   },
+   "sourceSize": {
+    "w": 280,
+    "h": 220
+   }
+  },
+  "cars/car-broken-facc15": {
+   "frame": {
+    "x": 440,
+    "y": 252,
+    "w": 216,
+    "h": 110
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 29,
+    "y": 61,
+    "w": 216,
+    "h": 110
+   },
+   "sourceSize": {
+    "w": 280,
+    "h": 220
+   }
+  },
+  "cars/car-broken-16a34a": {
+   "frame": {
+    "x": 660,
+    "y": 252,
+    "w": 216,
+    "h": 110
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 29,
+    "y": 61,
+    "w": 216,
+    "h": 110
+   },
+   "sourceSize": {
+    "w": 280,
+    "h": 220
+   }
+  },
+  "cars/car-broken-0f172a": {
+   "frame": {
+    "x": 880,
+    "y": 252,
+    "w": 216,
+    "h": 110
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 29,
+    "y": 61,
+    "w": 216,
+    "h": 110
+   },
+   "sourceSize": {
+    "w": 280,
+    "h": 220
+   }
+  },
+  "cars/car-broken-f97316": {
+   "frame": {
+    "x": 1100,
+    "y": 252,
+    "w": 216,
+    "h": 110
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 29,
+    "y": 61,
+    "w": 216,
+    "h": 110
+   },
+   "sourceSize": {
+    "w": 280,
+    "h": 220
+   }
+  },
+  "cars/car-broken-9333ea": {
+   "frame": {
+    "x": 1320,
+    "y": 252,
+    "w": 216,
+    "h": 110
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 29,
+    "y": 61,
+    "w": 216,
+    "h": 110
+   },
+   "sourceSize": {
+    "w": 280,
+    "h": 220
+   }
+  },
+  "cars/car-broken-06b6d4": {
+   "frame": {
+    "x": 1540,
+    "y": 252,
+    "w": 216,
+    "h": 110
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 29,
+    "y": 61,
+    "w": 216,
+    "h": 110
+   },
+   "sourceSize": {
+    "w": 280,
+    "h": 220
+   }
+  },
+  "items/crown": {
+   "frame": {
+    "x": 1760,
+    "y": 252,
+    "w": 132,
+    "h": 106
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 12,
+    "y": 33,
+    "w": 132,
+    "h": 106
+   },
+   "sourceSize": {
+    "w": 160,
+    "h": 160
+   }
+  }
+ },
+ "meta": {
+  "app": "TURBOSTRADA kit",
+  "image": "objects.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 2048,
+   "h": 362
+  },
+  "scale": "1"
+ }
+}

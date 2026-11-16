@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TURBOSTRADA – Highway Turbo – TikTok LIVE</title>
+<script type="importmap">{ "imports": { "three": "/vendor/three/three.module.js", "three/addons/": "/vendor/addons/" } }</script>
+<style>
+  @font-face { font-family:'Lilita One'; font-weight:400; src:url(/vendor/fonts/lilita-one/files/lilita-one-latin-ext-400-normal.woff2) format('woff2'); unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family:'Lilita One'; font-weight:400; src:url(/vendor/fonts/lilita-one/files/lilita-one-latin-400-normal.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family:'Nunito'; font-weight:900; src:url(/vendor/fonts/nunito/files/nunito-latin-ext-900-normal.woff2) format('woff2'); unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family:'Nunito'; font-weight:900; src:url(/vendor/fonts/nunito/files/nunito-latin-900-normal.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+  :root {
+    --gold:#ffd23f; --silver:#dfe7f1; --bronze:#f0a066; --pink:#ff2d78; --orange:#ff8a3d; --cyan:#2ee6ff; --violet:#7b2ff7;
+    --panel: rgba(14, 18, 34, .9); --line: rgba(255,255,255,.22);
+    --display: 'Lilita One', 'Segoe UI', sans-serif; --text: 'Nunito', 'Segoe UI', sans-serif;
+  }
+  * { box-sizing:border-box; }
+  html, body { margin:0; height:100%; background:#05030f; overflow:hidden; color:#fff; font-family:var(--text); font-weight:900; }
+  #wrap { position:relative; height:100vh; aspect-ratio:9/16; max-width:100vw; margin:0 auto; overflow:hidden; container-type:size; background:#05030f; }
+  #stage, #stage canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
+  #hud { position:absolute; inset:0; pointer-events:none; font-size:2.2cqh; }
+  .panel { background:var(--panel); border:2px solid var(--line); border-radius:.7em; box-shadow:0 .18em 0 rgba(0,0,0,.45); }
+
+  /* ---------- top bar */
+  /* TikTok acopera: sus 0-13% (gazda, spectatori, X), jos-stanga 60-92% (comentarii) si jos 92-100% (butoane). HUD-ul sta intre ele. */
+  #top { position:absolute; top:12.6cqh; left:3.5cqw; right:3.5cqw; display:flex; align-items:center; gap:2cqw; }
+  .logo { display:flex; flex-direction:row; align-items:center; gap:.4em; line-height:.9; transform:rotate(-2deg); filter:drop-shadow(0 .25em .3em rgba(0,0,0,.45)); }
+  .logo .a { font-family:var(--display); font-size:1.55em; background:linear-gradient(180deg,#fff6a8 0%,#ffd23f 45%,#ff8a1f 100%); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-stroke:.045em #3b1060; padding-right:.1em; }
+  .logo .b { font-family:var(--display); font-size:.6em; letter-spacing:.18em; padding:.25em .55em .2em; border-radius:.4em; background:var(--pink); box-shadow:0 .15em 0 #8a0f40; }
+  .timer { position:relative; width:4.6cqh; height:4.6cqh; flex:none; font-size:1.25em; }
+  .timer svg { position:absolute; inset:0; transform:rotate(-90deg); }
+  .timer circle { fill:none; stroke-width:8; }
+  .timer .bg { stroke:rgba(255,255,255,.2); fill:rgba(14,18,34,.92); }
+  .timer .fg { stroke:var(--cyan); stroke-linecap:round; transition:stroke-dashoffset .25s linear, stroke .3s; }
+  .timer.warn .fg { stroke:#ff3b5c; }
+  .timer.warn { animation:beat .5s infinite alternate; }
+  .timer span { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:var(--display); font-size:.95em; }
+
+  /* ---------- chips + ticker */
+  /* fara logo: timpul sta in randul de chip-uri, totul urca un rand => mai mult loc pentru bare */
+  #chips { position:absolute; top:12.8cqh; align-items:center; left:3.5cqw; right:3.5cqw; display:flex; gap:1cqw; font-size:.68em; }
+  .chip { padding:.42em .8em; border-radius:.6em; white-space:nowrap; display:flex; align-items:center; gap:.4em; }
+  #modeInfo { min-width:0; overflow:hidden; text-overflow:ellipsis; flex:0 1 auto; }
+  #ticker { flex:1; min-width:28%; overflow:hidden; background:#c41f62; border-color:rgba(255,255,255,.3); }
+  #ticker b { color:var(--gold); }
+  #ticker .t { display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; animation:tick .45s ease-out; }
+
+  /* ---------- mini race track */
+  #track { position:absolute; top:18cqh; left:3.5cqw; right:3.5cqw; height:3.8cqh; }
+  #track .road { position:absolute; inset:0; border-radius:999px; background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.35) 0 1.4em, transparent 1.4em 2.6em) center/100% 2px no-repeat,
+      #1a2034; border:2px solid var(--line); }
+  #track .flag { position:absolute; right:-.2em; top:50%; transform:translateY(-50%); font-size:1.5em; filter:drop-shadow(0 0 .3em #000); }
+  .dot { position:absolute; top:50%; width:3cqh; height:3cqh; margin:-1.5cqh 0 0 -1.5cqh; border-radius:50%; border:.22em solid #fff; background:#333 center/cover; transition:left .35s ease-out; box-shadow:0 0 .5em rgba(0,0,0,.6); }
+  .dot.r1 { border-color:var(--gold); width:3.6cqh; height:3.6cqh; margin:-1.8cqh 0 0 -1.8cqh; z-index:3; }
+  .dot.r2 { border-color:var(--silver); z-index:2; } .dot.r3 { border-color:var(--bronze); z-index:2; }
+  .dot.r1::after { content:'👑'; position:absolute; top:-1.15em; left:50%; transform:translateX(-50%); font-size:.95em; }
+
+  /* ---------- leaderboard */
+  #board { position:absolute; top:30cqh; left:3.5cqw; width:50cqw; padding:.5em .5em .4em; }
+  #board h3, #feedT { margin:0 0 .35em .3em; font-family:var(--display); font-weight:400; font-size:.95em; letter-spacing:.06em; color:var(--gold); }
+  #rows { position:relative; height:calc(5 * 4.7cqh); }
+  .row { position:absolute; left:0; right:0; top:0; height:4.3cqh; display:flex; align-items:center; gap:.45em; padding:0 .45em 0 .2em; border-radius:.8em; transition:transform .45s cubic-bezier(.2,.9,.3,1.15), opacity .3s; background:rgba(255,255,255,.05); }
+  .row.p1 { background:linear-gradient(90deg,rgba(255,210,63,.42),rgba(255,138,61,.12)); box-shadow:inset 0 0 0 1px rgba(255,210,63,.55); }
+  .row .rk { width:1.65em; height:1.65em; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--display); font-size:.9em; background:rgba(255,255,255,.14); flex:none; }
+  .row.p1 .rk { background:var(--gold); color:#4a2d00; } .row.p2 .rk { background:var(--silver); color:#26303d; } .row.p3 .rk { background:var(--bronze); color:#3d1b05; }
+  .av { width:3.3cqh; height:3.3cqh; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,.85); background:#333; flex:none; }
+  .row .mid { flex:1; min-width:0; display:flex; flex-direction:column; gap:.2em; }
+  .row .nm { font-size:.82em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .row .bar { height:.32em; border-radius:9px; background:rgba(255,255,255,.12); overflow:hidden; }
+  .row .bar i { display:block; height:100%; width:0; background:linear-gradient(90deg,var(--cyan),var(--pink)); border-radius:9px; transition:width .3s; }
+  .row .m { font-family:var(--display); font-size:.95em; font-variant-numeric:tabular-nums; text-align:right; min-width:2.6em; }
+  .row .pw { font-size:.8em; }
+  .empty { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; opacity:.85; font-size:.85em; }
+
+  /* ---------- moduri */
+  #modeInfo { background:#3b2a6e; }
+  #modeInfo.danger { background:#b3182f; animation:beat .4s infinite alternate; }
+  #teamsBar { position:absolute; top:18cqh; left:3.5cqw; right:3.5cqw; height:3.8cqh; display:none; gap:3px; border-radius:999px; overflow:hidden; border:2px solid rgba(255,255,255,.35); box-shadow:0 0 1em rgba(0,0,0,.4); }
+  body[data-mode="teams"] #teamsBar { display:flex; }
+  body[data-mode="teams"] #track { display:none; }
+  body[data-finish="0"] #track .flag { display:none; } /* Echipe / Eliminare: fara linie de sosire */
+  .tseg { flex:1 1 0; min-width:0; display:flex; align-items:center; gap:.35em; padding:0 .6em; background:linear-gradient(180deg, color-mix(in srgb, var(--c) 85%, white), var(--c)); transition:flex-grow .5s ease-out; font-size:.75em; white-space:nowrap; overflow:hidden; text-shadow:0 1px 2px rgba(0,0,0,.6); }
+  .tseg:last-child { justify-content:flex-end; flex-direction:row-reverse; }
+  .tseg .tn { overflow:hidden; text-overflow:ellipsis; }
+  .tseg .ts { font-family:var(--display); margin-left:auto; font-size:1.15em; }
+  .tseg:last-child .ts { margin-left:0; margin-right:auto; }
+
+  /* ---------- bottom strip (top 5) */
+  /* CUM SE JOACA – banner mare, mereu vizibil, sub bara cursei (lizibil si pe telefon, in afara zonelor acoperite de TikTok) */
+  #howto { position:absolute; top:22.6cqh; left:3.5cqw; right:3.5cqw; display:flex; flex-direction:column; align-items:center; gap:.55cqh; pointer-events:none; z-index:3; }
+  #howto .how-row { position:static; display:flex; gap:2cqw; width:100%; }
+  #howto .how-pill { flex:1; text-align:center; font-family:var(--display); font-size:2.75cqh; line-height:1.2; padding:.5cqh 1.2cqw; border-radius:999px; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    border:.25cqh solid rgba(255,255,255,.7); text-shadow:0 .25cqh 0 rgba(0,0,0,.45); box-shadow:0 .45cqh 0 rgba(0,0,0,.35), 0 0 1.4cqh rgba(0,0,0,.45); }
+  #howto .how-tap { background:linear-gradient(180deg,#3be27b,#139447); animation:howPulse 1.5s ease-in-out infinite; }
+  #howto .how-gift { background:linear-gradient(180deg,#ffbe3b,#e5631b); }
+  #howto .how-sub { font-family:var(--text); font-weight:900; font-size:1.75cqh; color:#fff; background:rgba(12,10,32,.78); border:1px solid rgba(255,255,255,.25); padding:.3cqh 1.6cqw; border-radius:999px; text-shadow:0 1px 2px #000; white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis; }
+  #howto .how-sub:empty { display:none; }
+  @keyframes howPulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.045); } }
+  #strip { position:absolute; right:2cqw; width:24cqw; top:30.6cqh; height:40cqh; flex-direction:column; display:flex; gap:1.4cqw; align-items:stretch; }
+  #stripLabel { height:3.6cqh; font-size:1.1em !important; width:auto !important; border-radius:.7em; display:flex; align-items:center; justify-content:center; font-size:1.5em; background:#f5b51f; border:2px solid #fff3c4; box-shadow:0 .18em 0 #8a5a00; flex:none; }
+  #cards { position:relative; flex:1; }
+  .card { position:absolute; top:0; bottom:0; left:0; width:calc(20% - 1.1cqw); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.1em; border-radius:.7em; transition:transform .5s cubic-bezier(.2,.9,.3,1.15), opacity .3s; padding:.3em .2em; }
+  .card .ava { position:relative; }
+  .card .av { width:5.2cqh; height:5.2cqh; border-width:3px; }
+  .card .rk { position:absolute; top:-.35em; left:-.45em; width:1.55em; height:1.55em; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--display); font-size:.78em; background:#2a2440; border:2px solid rgba(255,255,255,.7); }
+  .card .pw { position:absolute; bottom:-.3em; right:-.6em; font-size:.85em; }
+  .card .nm { max-width:100%; font-size:.68em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding:0 .2em; }
+  .card .m { font-family:var(--display); font-size:.82em; color:var(--cyan); line-height:1; }
+  .card.c1 { background:#3a2f12; border-color:var(--gold); }
+  /* coloana din dreapta: fiecare card e un rand (poza | nume + metri) */
+  #strip .card { left:0; right:0; width:auto; top:0; bottom:auto; height:calc(20% - .9cqh); flex-direction:row; justify-content:flex-start; gap:.35em; padding:0 .35em; }
+  #strip .card .av { width:4.4cqh; height:4.4cqh; }
+  #strip .card .txt { display:flex; flex-direction:column; min-width:0; flex:1; gap:.15em; }
+  #strip .card .nm { font-size:.6em; text-align:left; padding:0; }
+  #strip .card .m { font-size:.72em; text-align:left; white-space:nowrap; }
+  #strip .card .fb { width:100%; margin:0; }
+  .card.c2 { border-color:var(--silver); } .card.c3 { border-color:var(--bronze); }
+  .card.c1 .rk { background:var(--gold); color:#4a2d00; border-color:#fff; } .card.c2 .rk { background:var(--silver); color:#26303d; } .card.c3 .rk { background:var(--bronze); color:#3d1b05; }
+  .card.c1 .av { border-color:var(--gold); } .card.c2 .av { border-color:var(--silver); } .card.c3 .av { border-color:var(--bronze); }
+  .card.fin .m { color:var(--gold); }
+  .card .fb { width:80%; height:.3em; flex:none; border-radius:9px; background:rgba(255,255,255,.14); overflow:hidden; margin-top:.1em; }
+  .card .fb i, .fbar i { display:block; height:100%; border-radius:9px; background:linear-gradient(90deg,#ffd23f,#7cff6b); transition:width .3s; }
+  .card .fb i.low, .fbar i.low { background:#ff3b5c; animation:beat .5s infinite alternate; }
+  .fbar { display:inline-block; vertical-align:middle; width:5em; height:.45em; border-radius:9px; background:rgba(255,255,255,.14); overflow:hidden; }
+
+  /* ---------- focus card (camera pe un jucator) */
+  #focus { position:absolute; top:30.4cqh; left:3cqw; display:flex; align-items:center; gap:.45em; padding:.35em .6em .35em .35em; font-size:.56em; opacity:0; transform:translateY(30%); transition:all .4s cubic-bezier(.2,1.3,.4,1); width:70cqw; border-radius:.9em; }
+  #focus > div { min-width:0; }
+  #focus.show { opacity:1; transform:none; }
+  #focus .av { width:3.8cqh; height:3.8cqh; border:2px solid var(--cyan); }
+  #focus .n { font-family:var(--display); font-size:1.15em; line-height:1.05; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #focus .n span { color:var(--gold); }
+  #focus .s { font-size:.8em; opacity:.92; line-height:1.35; }
+  #focus .cam { position:absolute; top:-.7em; right:-.5em; font-size:1em; }
+
+  /* ---------- zidul fanilor + avertizari */
+  #fanwall { position:absolute; right:2cqw; top:64.4cqh; width:4.6cqh; height:13cqh; overflow:hidden; pointer-events:none; }
+  .fan { position:absolute; left:0; top:0; display:flex; flex-direction:column; align-items:center; transition:transform .4s cubic-bezier(.2,1.2,.4,1), opacity .4s; }
+  .fan .av { width:4cqh; height:4cqh; border-width:2px; border-color:var(--cyan); }
+  .fan span { font-size:.55em; margin-top:-.4em; filter:drop-shadow(0 1px 2px #000); }
+  #lost, #sndHint { position:absolute; left:50%; transform:translateX(-50%); font-size:.72em; padding:.45em 1em; border-radius:999px; opacity:0; transition:opacity .3s; white-space:nowrap; }
+  #lost { top:39.4cqh; background:#b3182f; }
+  #sndHint { top:52cqh; }
+  #lost.show, #sndHint.show { opacity:1; }
+  #routeInfo { background:#0f5a78; } #pauseInfo { background:#a0102a; }
+
+  /* ---------- feed */
+  #feed { position:absolute; top:38.4cqh; left:3cqw; width:60cqw; flex-direction:row !important; display:flex; flex-direction:row-reverse; justify-content:flex-start; gap:.4em; font-size:.5em; }
+  .toast { flex:1 1 0; min-width:0; display:flex; align-items:center; gap:.4em; padding:.35em .5em .35em .35em; border-radius:.8em; animation:toastIn .4s cubic-bezier(.2,1.4,.4,1); line-height:1.15; }
+  .toast > div { min-width:0; } .toast b { display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .toast small { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .toast .av { width:3.2cqh; height:3.2cqh; flex:none; }
+  .toast.gift { background:#c41f62; border-color:rgba(255,255,255,.35); }
+  .toast.out { animation:toastOut .4s forwards; }
+  .toast small { display:block; opacity:.92; font-size:.88em; }
+
+  /* ---------- banner + countdown */
+  #banner { position:absolute; top:44cqh; left:5cqw; right:5cqw; display:flex; justify-content:center; opacity:0; transform:scale(.5) rotate(-4deg); transition:all .45s cubic-bezier(.2,1.6,.35,1); z-index:4; }
+  #banner.show { opacity:1; transform:none; }
+  .bcard { position:relative; overflow:hidden; display:flex; align-items:center; gap:.6em; padding:.5em 1em .5em .5em; border-radius:1.1em; font-size:.85em; background:#c41f62; border:2px solid rgba(255,255,255,.55); box-shadow:0 .22em 0 rgba(0,0,0,.45); }
+  .bcard::after { content:none; }
+  .bcard img { width:5.5cqh; height:5.5cqh; border-radius:50%; border:.2em solid #fff; object-fit:cover; background:#333; }
+  .bcard .l1 { font-size:.85em; opacity:.95; }
+  .bcard .l2 { font-family:var(--display); font-size:1.25em; line-height:1.05; }
+  #count { position:absolute; top:40cqh; left:0; right:0; text-align:center; font-family:var(--display); font-size:11em; line-height:1; color:#fff; -webkit-text-stroke:.03em #3b1060; text-shadow:0 .06em 0 #3b1060; }
+  #count.pop { animation:pop .6s cubic-bezier(.2,1.6,.4,1); }
+  #count.msg { font-family:var(--text); font-size:1.15em; top:44cqh; -webkit-text-stroke:0; text-shadow:none; }
+  #count .pill { display:inline-block; padding:.7em 1.1em; border-radius:1.1em; line-height:1.35; animation:beat 1s infinite alternate; }
+  #count .pill b { color:var(--gold); }
+  #status { position:absolute; bottom:.8cqh; left:50%; transform:translateX(-50%); font-size:.5em; opacity:.6; padding:.25em .8em; white-space:nowrap; border-radius:999px; }
+  #loading { position:absolute; inset:0; display:flex; flex-direction:column; gap:.3em; align-items:center; justify-content:center; font-family:var(--display); font-size:4cqh; background:radial-gradient(circle at 50% 40%, #3b1060, #05030f); z-index:9; transition:opacity .6s; }
+  #loading.hide { opacity:0; pointer-events:none; }
+
+  /* ---------- podium UI */
+  #pod { position:absolute; inset:0; display:none; z-index:3; }
+  #pod.show { display:block; animation:fade .6s; }
+  #pod .title { position:absolute; top:12.8cqh; left:0; right:0; text-align:center; }
+  #pod .title .k { font-family:var(--display); font-size:2.7em; line-height:1; background:linear-gradient(180deg,#fff6a8,#ffd23f 50%,#ff8a1f); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-stroke:.04em #3b1060; filter:drop-shadow(0 .2em .3em rgba(0,0,0,.5)); }
+  #pod .title .s { margin-top:.5em; font-size:.85em; display:inline-block; padding:.35em .9em; border-radius:999px; }
+  #pod .tables { position:absolute; left:3.5cqw; right:3.5cqw; top:27.2cqh; display:flex; gap:2.5cqw; font-size:.72em; }
+  #pod .tables > div { flex:1; min-width:0; padding:.6em .6em .4em; }
+  #pod h4 { margin:0 0 .4em .2em; font-family:var(--display); font-weight:400; color:var(--gold); font-size:1.1em; letter-spacing:.04em; }
+  .trow { display:flex; align-items:center; gap:.45em; padding:.2em .3em; border-radius:.6em; }
+  .trow:nth-child(odd) { background:rgba(255,255,255,.05); }
+  .trow .rk { width:1.4em; text-align:center; font-family:var(--display); }
+  .trow .av { width:2.3em; height:2.3em; }
+  .trow .nm { flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .trow .m { font-family:var(--display); white-space:nowrap; }
+  #pod .next { position:absolute; left:0; right:0; top:22.8cqh; text-align:center; }
+  #pod .next span { display:inline-block; padding:.45em 1em; border-radius:999px; font-size:.8em; }
+
+
+  body.livesrc #status, body.livesrc #sndHint { display:none !important; } /* in live nu apar mesajele pentru streamer */
+  /* ---------- ghid: unde pune TikTok butoanele (doar ?tiktok=1) */
+  #ttGuide { position:absolute; inset:0; z-index:20; pointer-events:none; display:none; font-family:var(--text); color:#fff; }
+  body.tt #ttGuide { display:block; }
+  #ttGuide .z { position:absolute; background:rgba(255,40,80,.16); border:1px dashed rgba(255,90,120,.85); }
+  #ttGuide .zl { position:absolute; left:.5em; bottom:.3em; font-size:1.25cqh; color:#ffb3c4; text-shadow:0 1px 2px #000; }
+  #ttGuide .pill { position:absolute; display:flex; align-items:center; gap:.5em; background:rgba(0,0,0,.42); border-radius:999px; padding:.3em .8em .3em .3em; font-size:1.55cqh; }
+  #ttGuide .ava { width:3.6cqh; height:3.6cqh; border-radius:50%; background:linear-gradient(135deg,#ff8a3d,#ff2d78); border:2px solid #fff; flex:none; }
+  #ttGuide .fol { background:#fe2c55; border-radius:999px; padding:.25em .8em; font-size:.9em; }
+  #ttGuide .ic { position:absolute; width:4.6cqh; height:4.6cqh; border-radius:50%; background:rgba(0,0,0,.42); display:flex; align-items:center; justify-content:center; font-size:2.3cqh; }
+  #ttGuide .cm { display:flex; gap:.5em; align-items:flex-start; font-size:1.5cqh; margin-top:.7em; text-shadow:0 1px 2px #000; }
+  #ttGuide .cm .ava { width:2.8cqh; height:2.8cqh; border-width:1px; }
+  #ttGuide .cm b { color:#ffd9e2; display:block; font-size:.9em; }
+  #ttGuide .tag { position:absolute; left:50%; top:13.2cqh; transform:translateX(-50%); font-size:1.3cqh; background:#fe2c55; padding:.2em .7em; border-radius:999px; white-space:nowrap; }
+  @keyframes beat { from { transform:scale(1); } to { transform:scale(1.06); } }
+  @keyframes tick { from { opacity:.3; transform:translateY(60%); } to { opacity:1; transform:none; } }
+  @keyframes toastIn { from { opacity:0; transform:translateX(40%) scale(.8); } to { opacity:1; transform:none; } }
+  @keyframes toastOut { to { opacity:0; transform:translateX(30%); } }
+  @keyframes shine { to { left:130%; } }
+  @keyframes pop { 0% { transform:scale(2.2); opacity:0; } 60% { opacity:1; } 100% { transform:scale(1); } }
+  @keyframes fade { from { opacity:0; } to { opacity:1; } }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="stage"></div>
+  <div id="hud">
+    <div id="top" style="display:none"><div class="logo"><span class="a">TURBO</span><span class="b" id="hw">STRADA</span></div></div>
+    <div id="chips">
+      <div class="chip panel" id="roundInfo">🏁 Runda 1</div>
+      <div class="chip panel" id="playersInfo">🏃 0</div>
+      <div class="chip panel" id="modeInfo" style="display:none"></div>
+      <div class="chip panel" id="routeInfo" style="display:none"></div>
+      <div class="chip panel" id="pauseInfo" style="display:none">⏸</div>
+      <div class="chip panel" id="ticker"><span class="t">💬 <b>Scrie în chat</b> ca să intri în cursă</span></div>
+      <div class="timer" id="timer"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44"/><circle class="fg" id="ring" cx="50" cy="50" r="44" stroke-dasharray="276.5" stroke-dashoffset="0"/></svg><span id="time">5:00</span></div>
+    </div>
+    <div id="track"><div class="road"></div><div class="flag">🏁</div></div>
+    <div id="teamsBar"></div>
+    <div id="howto"><div class="how-row"><span class="how-pill how-tap" id="howA"></span><span class="how-pill how-gift" id="howB"></span></div><div class="how-sub" id="howC"></div></div>
+    <div id="focus" class="panel"></div>
+    <div id="strip"><div id="stripLabel">🏆</div><div id="cards"></div></div>
+    <div id="feed"></div>
+    <div id="fanwall"></div>
+    <div id="lost" class="panel"></div>
+    <div id="sndHint" class="panel"></div>
+    <div id="banner"></div>
+    <div id="count"></div>
+    <div id="ttGuide">
+      <div class="z" style="left:0;right:0;top:0;height:12cqh"><span class="zl">TikTok: gazda + spectatori</span></div>
+      <div class="z" style="left:0;width:74cqw;top:60cqh;height:32cqh"><span class="zl">TikTok: comentarii + gift-uri</span></div>
+      <div class="z" style="left:0;right:0;top:92cqh;bottom:0"><span class="zl">TikTok: bara de jos</span></div>
+      <div class="z" style="right:0;width:14cqw;top:80cqh;height:12cqh"><span class="zl">butoane</span></div>
+      <div class="pill" style="left:2.5cqw;top:4.2cqh"><span class="ava"></span><span>tu_streamer<br><small style="opacity:.8">❤️ 12.4K</small></span><span class="fol">+ Follow</span></div>
+      <div class="pill" style="right:12cqw;top:4.6cqh;padding:.3em .8em">👤👤👤 1.2K</div>
+      <div class="ic" style="right:2.5cqw;top:4.4cqh">✕</div>
+      <div class="pill" style="left:2.5cqw;top:9.4cqh;padding:.2em .8em;font-size:1.3cqh">🏆 Clasament orar · 🔥 Popular</div>
+      <div style="position:absolute;left:3cqw;width:66cqw;top:64cqh">
+        <div class="cm"><span class="ava"></span><span><b>maria_ioana</b>hai rosu!!</span></div>
+        <div class="cm"><span class="ava"></span><span><b>darius.tt</b>a trimis Trandafir x5 🌹</span></div>
+        <div class="cm"><span class="ava"></span><span><b>cristi.gamer</b>#3 haide</span></div>
+        <div class="cm"><span class="ava"></span><span><b>alina.m18</b>s-a alăturat</span></div>
+        <div class="cm"><span class="ava"></span><span><b>sebi.drifter</b>👏👏👏</span></div>
+      </div>
+      <div class="pill" style="left:2.5cqw;top:93.4cqh;width:44cqw;padding:.55em 1em;opacity:.95">Adaugă un comentariu…</div>
+      <div class="ic" style="right:38cqw;top:93cqh">❓</div><div class="ic" style="right:27cqw;top:93cqh">🌹</div><div class="ic" style="right:15cqw;top:93cqh">🎁</div><div class="ic" style="right:3cqw;top:93cqh">↗</div>
+      <div class="ic" style="right:3cqw;top:82cqh">❤️</div><div class="ic" style="right:3cqw;top:87.2cqh;font-size:1.6cqh">•••</div>
+      <div class="tag">PREVIZUALIZARE – butoanele TikTok (aproximativ)</div>
+    </div>
+    <div id="pod">
+      <div class="title"><div class="k" id="winT">🏆</div><div class="s panel" id="podSub"></div></div>
+      <div class="next"><span class="panel" id="podNext"></span></div>
+      <div class="tables">
+        <div class="panel"><h4 id="hTop">📊 TOP</h4><div id="roundTable"></div></div>
+        <div class="panel"><h4 id="hChamp">👑</h4><div id="champTable"></div></div>
+      </div>
+    </div>
+    <div id="status" class="panel">…</div>
+  </div>
+  <div id="loading"><div>🏁 TURBOSTRADA</div><div style="font-size:.5em;opacity:.8">se încarcă…</div></div>
+</div>
+
+
+<script type="module" src="/js/game.js"></script>
+</body>
+</html>

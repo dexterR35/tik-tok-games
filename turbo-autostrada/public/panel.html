@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🎛️ Panou – TURBOSTRADA</title>
+<style>
+  @font-face { font-family:'Nunito'; font-weight:900; src:url(/vendor/fonts/nunito/files/nunito-latin-900-normal.woff2) format('woff2'); }
+  @font-face { font-family:'Nunito'; font-weight:900; src:url(/vendor/fonts/nunito/files/nunito-latin-ext-900-normal.woff2) format('woff2'); unicode-range: U+0100-024F, U+0259, U+1E00-1EFF; }
+  :root { --gold:#ffd23f; --cyan:#2ee6ff; --line:rgba(255,255,255,.14); --text:'Nunito','Segoe UI',sans-serif; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; background:radial-gradient(circle at 30% 0%, #2a1458, #0b0718 60%); color:#fff; font:800 13px var(--text); }
+  .wrap { max-width:980px; margin:0 auto; padding:16px; display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  header { grid-column:1/-1; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  header h1 { margin:0; font-size:20px; }
+  .card { background:rgba(16,10,38,.85); border:1px solid var(--line); border-radius:14px; padding:12px 14px; }
+  .card > i { display:block; font-style:normal; font-size:11px; opacity:.65; text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px; }
+  .full { grid-column:1/-1; }
+  .srow { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:6px; }
+  button { padding:8px 10px; border-radius:9px; border:0; font:800 12.5px var(--text); cursor:pointer; background:#2b2f4a; color:#fff; }
+  button:hover { filter:brightness(1.25); } button:active { transform:scale(.97); }
+  button.g { background:linear-gradient(90deg,#ff2d78,#ff8a3d); }
+  button:disabled { opacity:.35; cursor:not-allowed; }
+  button.on { background:#16a34a; } button.cur { outline:2px solid var(--gold); background:#3b2a6a; }
+  button.red { background:#a0102a; }
+  input, select { padding:7px 8px; border-radius:8px; border:0; font:700 12.5px var(--text); background:#e9e6f5; color:#1a1030; min-width:0; flex:1; }
+  label { display:flex; justify-content:space-between; align-items:center; gap:10px; margin:5px 0; }
+  label input { flex:none; width:80px; } label input[type=range] { width:140px; padding:0; }
+  .pill { padding:5px 10px; border-radius:999px; background:#2b2f4a; font-size:12px; }
+  .pill.ok { background:#16a34a; } .pill.bad { background:#a0102a; }
+  #top5 div { display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid var(--line); }
+  small { opacity:.6; }
+  .games { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .gm { border:1px solid var(--line); border-radius:10px; padding:8px 10px; }
+  .gm.cur { border-color:var(--gold); box-shadow:0 0 0 1px var(--gold) inset; }
+  .gm small { display:block; margin:2px 0 6px; }
+  @media (max-width:760px) { .games { grid-template-columns:1fr; } }
+  @media (max-width:760px) { .wrap { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🎛️ Panou de control – TURBOSTRADA</h1>
+    <span class="pill" id="conn">…</span>
+    <span class="pill" id="st">…</span>
+    <span class="pill bad" id="warn" style="display:none"></span>
+  </header>
+  <div class="card full" id="pwBox" style="display:none"><i>Panou deschis de pe alt dispozitiv</i><div class="srow"><input id="pw" type="password" placeholder="parola panoului (config.json → panelPassword)"><button id="pwBtn">🔓 Intră</button></div><small id="pwMsg"></small></div>
+
+  <div class="card">
+    <i>Mod de joc</i>
+    <div class="srow" id="modes">
+      <button data-a="mode" data-v="classic">🏁 Clasic</button><button data-a="mode" data-v="challenge">🎟️ Challenge</button><button data-a="mode" data-v="teams">🔴🔵 Echipe</button><button data-a="mode" data-v="elimination">💀 Eliminare</button>
+    </div>
+    <div class="srow">
+      <select id="lang" data-c="lang"><option value="ro">🇷🇴 Română</option><option value="en">🇬🇧 English</option><option value="es">🇪🇸 Español</option><option value="de">🇩🇪 Deutsch</option><option value="fr">🇫🇷 Français</option><option value="it">🇮🇹 Italiano</option><option value="pt">🇵🇹 Português</option><option value="tr">🇹🇷 Türkçe</option></select>
+      <select id="time" data-c="time"><option value="">🕒 Ora reală</option><option value="13">☀️ Zi</option><option value="18">🌇 Apus</option><option value="23">🌙 Noapte</option><option value="6.5">🌅 Răsărit</option></select>
+    </div>
+    <small>Înainte de start modul se schimbă imediat; în timpul cursei, de la runda următoare.</small>
+    <small id="lockNote" style="display:none;color:#ffd23f">🔒 Acest live are jocul fix (setat în fișierul lui din <code>lives/</code>).</small>
+    <div class="srow"><a href="/preview.html" target="_blank"><button>📱 Previzualizare cu butoanele TikTok</button></a></div>
+    <div class="srow" style="align-items:center"><small>🔗 Link pentru LIVE Studio (sursa „Link”, 1080×1920):</small></div>
+    <div class="srow"><input id="liveUrl" readonly style="flex:1"><button id="copyUrl">📋 Copiază</button></div>
+  </div>
+
+  <div class="card">
+    <i>Control</i>
+    <div class="srow"><button data-a="start">▶ Start acum</button><button data-a="end">⏹ Termină cursa</button><button data-a="next">⏭ Rundă nouă</button></div>
+    <div class="srow"><button data-a="pause" id="pauseBtn">⏸ Pauză</button><button data-a="mute" id="muteBtn">🔊 Sunet</button><button data-a="auto" id="autoBtn">🤖 Auto-public: OFF</button></div>
+    <div class="srow"><input id="cmdIn" placeholder="!mode teams / !end / !lang en / !round 180 (durata jocului curent)"><button data-a="cmd">▶</button></div>
+    <div id="top5"></div>
+  </div>
+
+  <div class="card">
+    <i>Test: spectator (gol = aleator)</i>
+    <div class="srow"><input id="user" placeholder="👤 nume utilizator"><input id="text" placeholder="💬 text comentariu"></div>
+    <div class="srow"><button data-a="chat">💬 Comentariu</button><button data-a="join" data-v="5">+5</button><button data-a="join" data-v="50">+50</button><button data-a="join" data-v="500">+500</button></div>
+    <div class="srow"><button data-a="tap" data-v="1">👆 Tap</button><button data-a="tap" data-v="15">👆 x15</button><button data-a="tap" data-v="100">👆 x100</button><button data-a="follow">➕ Follow</button><button data-a="share">🔁 Share</button></div>
+    <div class="srow"><button data-a="ticket">🎟️ Bilet</button><button data-a="fan">📣 Fan #</button><button data-a="team" data-v="rosu">🔴 Roșu</button><button data-a="team" data-v="albastru">🔵 Albastru</button></div>
+    <small>⚠ Evenimentele de test apar și în live. Folosește-le doar când testezi. În Challenge, +5/+50/+500 intră cu bilet.</small>
+  </div>
+
+  <div class="card">
+    <i>Test: gift-uri (monede)</i>
+    <div class="srow"><button class="g" data-a="gift" data-v="1">🌹 1</button><button class="g" data-a="gift" data-v="5">🍦 5</button><button class="g" data-a="gift" data-v="10">💎 10</button><button class="g" data-a="gift" data-v="100">🚀 100</button><button class="g" data-a="gift" data-v="500">🦁 500</button></div>
+    <div class="srow"><input id="coins" type="number" min="1" value="30" style="max-width:90px"><input id="giftName" placeholder="nume gift" value="Gift"><button class="g" data-a="giftCustom">🎁 Trimite</button></div>
+  </div>
+
+  <div class="card full" id="shareBox">
+    <i>🌍 Partajare (link public prin TUNEL.bat)</i>
+    <div id="shareOff">Tunelul e oprit. Pornește <b>TUNEL.bat</b> (după START.bat) ca să primești un link pe care îl trimiți altora.</div>
+    <div id="shareOn" style="display:none">
+      <div class="srow"><input id="lnkGame" readonly><button data-copy="lnkGame">📋 Copiază</button></div>
+      <small>🎮 Jocul: cine deschide linkul vede cursa în timp real (doar privește; nu poate trimite comenzi).</small>
+      <div class="srow" style="margin-top:8px"><input id="lnkPanel" readonly><button data-copy="lnkPanel">📋 Copiază</button></div>
+      <small>🎛️ Panoul: pentru un moderator de încredere. Cere parola din <code>config.json</code> → <code>panelPassword</code>.</small>
+    </div>
+  </div>
+
+  <div class="card full">
+    <i>Setările celor 4 jocuri (se aplică imediat în fereastra jocului și rămân salvate) – fiecare joc are setările lui</i>
+    <div class="games">
+      <div class="gm" data-g="classic"><b>🏁 Clasic</b> <small>toți aleargă spre sosire; câștigă primii 3</small>
+        <label>⏱ Durata cursei (s)<input type="number" data-r="round" min="30" step="10"></label>
+        <label>⏳ Numărătoare la start (s)<input type="number" data-r="classicLobby" min="5" step="5"></label>
+        <label title="Sosirea e pusă acolo unde ajunge, în ultima secundă, cineva care dă atâtea tap-uri pe secundă toată cursa. Mai mic = mai ușor de ajuns la sosire.">🎯 Ținta pentru sosire (tap-uri/s)<input type="number" data-r="classicGoal" min="0.5" step="0.5"></label>
+      </div>
+      <div class="gm" data-g="challenge"><b>🎟️ Challenge</b> <small>aleargă doar cei cu bilet; restul sunt fani</small>
+        <label>⏱ Durata cursei (s)<input type="number" data-r="challengeRound" min="30" step="10"></label>
+        <label>⏳ Numărătoare la start (s)<input type="number" data-r="challengeLobby" min="5" step="5"></label>
+        <label>🎟️ Preț bilet (monede)<input type="number" data-r="ticket" min="1"></label>
+        <label>👥 Locuri în cursă<input type="number" data-r="challengeMax" min="2" max="500"></label>
+        <label title="Mai mic = mai ușor de ajuns la sosire.">🎯 Ținta pentru sosire (tap-uri/s)<input type="number" data-r="challengeGoal" min="0.5" step="0.5"></label>
+      </div>
+      <div class="gm" data-g="teams"><b>🔴🔵 Echipe</b> <small>fără sosire; câștigă echipa cu cei mai mulți metri câștigați</small>
+        <label>⏱ Durata cursei (s)<input type="number" data-r="teamsRound" min="30" step="10"></label>
+        <label>⏳ Numărătoare la start (s)<input type="number" data-r="teamsLobby" min="5" step="5"></label>
+        <label>🔴🔵 Număr echipe<input type="number" data-r="teams" min="2" max="4"></label>
+      </div>
+      <div class="gm" data-g="elimination"><b>💀 Eliminare</b> <small>fără sosire; durata se calculează singură din numărul de jucători</small>
+        <label>⏳ Numărătoare la start (s)<input type="number" data-r="elimLobby" min="5" step="5"></label>
+        <label>✂️ Prima tăiere după (s)<input type="number" data-r="elimFirst" min="10" step="5"></label>
+        <label>✂️ Apoi la fiecare (s)<input type="number" data-r="elimEvery" min="10" step="5"></label>
+        <label>🔥 Finaliști<input type="number" data-r="elimFinalists" min="1" max="10"></label>
+        <label>🔥 Durata finalei (s)<input type="number" data-r="elimFinal" min="0" step="5"></label>
+        <label>❤️ Revenire (monede)<input type="number" data-r="elimRevive" min="1"></label>
+      </div>
+    </div>
+    <i style="margin-top:12px">Comune (toate jocurile)</i>
+    <div style="display:grid;grid-template-columns:1fr 1fr;column-gap:24px">
+      <label>👆 Tap-uri pentru +1 m<input type="number" data-r="tapCost" min="1"></label>
+      <label>⚡ Energia scade la ½ în (s)<input type="number" data-r="focusHalf" min="2"></label>
+      <label title="Peste limită, un om nou ia locul unuia inactiv; dacă toți sunt activi, așteaptă în tribună până la runda următoare.">🏃 Maxim alergători pe pistă<input type="number" data-r="maxRacers" min="10" step="100"></label>
+      <label>🔊 Volum<input type="range" data-r="volume" min="0" max="1" step="0.05"></label>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const FAKE = ['alina.m18', 'valentin.catalin', 'roxy_2004', 'Mirela', 'gigel_drift', 'ionut.bmw', 'andreea.dance', 'Bogdan_RO', 'cristi.gamer', 'maria_ioana', 'darius.tt', 'elena.sky', 'vlad.turbo', 'ana.maria', 'costel_bv', 'denisa.xo', 'florin.cj', 'teo_gaming', 'larisa.m', 'sebi.drifter', 'oana.bianca', 'mihai.tm', 'raluca.is', 'nicu_2009'];
+const GIFTS = { 1: 'Rose', 5: 'Ice Cream', 10: 'Heart', 100: 'Sports Car', 500: 'Lion' };
+const MODE_NAME = { classic: 'Clasic', challenge: 'Challenge', teams: 'Echipe', elimination: 'Eliminare' };
+const PHASE = { lobby: '⏳ așteaptă start', race: '🏃 cursă', podium: '🏆 podium' };
+const pick = a => a[(Math.random() * a.length) | 0];
+let activeId = null, legacyAt = 0, otherAt = 0, trusted = true, ws = null, S = null, lastState = 0, fakeIdx = Math.floor(Math.random() * 1000), autoOn = false;
+
+function connect() {
+  ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws');
+  ws.onopen = () => { setConn(); const pw = localStorage.getItem('turbo-pw'); if (pw) sendRaw({ type: 'auth', password: pw }); };
+  ws.onclose = () => { setConn(); setTimeout(connect, 2000); };
+  ws.onmessage = e => { try { const m = JSON.parse(e.data); if (m.type === 'tunnel') { showTunnel(m.url); showLiveLink(m.liveLink); } if (m.type === 'hello') { trusted = m.trusted; setConn(); } if (m.type === 'auth') { trusted = m.ok; $('#pwMsg').textContent = m.ok ? '✅ conectat' : '❌ parolă greșită'; setConn(); } if (m.type === 'claim') { activeId = m.id; } if (m.type === 'state') onState(m.state); if (m.type === 'status') $('#conn').dataset.live = m.text; } catch {} };
+}
+function onState(st) {
+  if (!st.id) { legacyAt = Date.now(); return; }            // fereastra cu cod vechi: o ignoram
+  if (!activeId) activeId = st.id;
+  if (st.id !== activeId) { otherAt = Date.now(); if (Date.now() - lastState > 3000) activeId = st.id; else return; }
+  S = st; lastState = Date.now(); render();
+}
+function setConn() {
+  const c = $('#conn'), srv = ws && ws.readyState === 1, game = Date.now() - lastState < 2500;
+  $('#pwBox').style.display = srv && !trusted ? '' : 'none';
+  c.textContent = !srv ? '❌ Server oprit – pornește START.bat' : !trusted ? '🔒 Introdu parola panoului' : !game ? '⚠ Nicio fereastră de joc deschisă (JOC-*.bat)' : '✅ Jocul e conectat' + (c.dataset.live ? ' · ' + c.dataset.live : '');
+  c.className = 'pill ' + (srv && game ? 'ok' : 'bad');
+  const w = $('#warn'), old = Date.now() - legacyAt < 3000, dup = Date.now() - otherAt < 3000;
+  w.style.display = old || dup ? '' : 'none';
+  w.textContent = old ? '⚠ E deschisă o fereastră de joc VECHE (cod dinainte de actualizare). Închide-o sau apasă F5 în ea.' : dup ? '⚠ Sunt deschise două ferestre de joc. Închide-o pe cea în plus (sau dă click pe „Fereastră inactivă”).' : '';
+}
+setInterval(setConn, 1000);
+const sendRaw = m => { if (ws && ws.readyState === 1) ws.send(JSON.stringify(m)); };
+const send = event => sendRaw({ type: 'sim', event });
+const control = (action, extra = {}) => sendRaw({ type: 'control', action, ...extra });
+
+function freshUser() { const n = FAKE[fakeIdx % FAKE.length] + '_' + (fakeIdx++); return { id: n, name: n, avatar: '' }; }
+function existingUser() { const n = S && S.names && S.names.length ? pick(S.names) : null; return n ? { id: n, name: n, avatar: '' } : freshUser(); }
+function user(fresh) { const n = ($('#user').value || '').trim().replace(/^@/, ''); return n ? { id: n, name: n, avatar: '' } : fresh ? freshUser() : existingUser(); }
+function gift(v, name) { send({ type: 'gift', user: user(!(S && S.names && S.names.length)), giftName: name || GIFTS[v] || 'Gift', coins: v, total: v, repeat: 1, final: true }); }
+
+const A = {
+  mode: v => control('cmd', { text: '!mode ' + v }),
+  start: () => control('start'), end: () => control('end'), next: () => control('next'),
+  pause: () => control('pause', { on: !(S && S.paused) }),
+  mute: () => control('mute', { on: !(S && S.muted) }),
+  cmd: () => { const v = $('#cmdIn').value.trim(); if (v) { control('cmd', { text: v }); $('#cmdIn').value = ''; } },
+  auto: () => { autoOn = !autoOn; $('#autoBtn').textContent = `🤖 Auto-public: ${autoOn ? 'ON' : 'OFF'}`; $('#autoBtn').classList.toggle('on', autoOn); },
+  chat: () => { const txt = ($('#text').value || '').trim() || (S?.mode === 'teams' ? pick(['rosu', 'albastru']) : S?.mode === 'challenge' ? pick(['hai!', '#1', '#2']) : 'hai!'); send({ type: 'chat', user: user(Math.random() < 0.5), text: txt }); },
+  join: n => { const C = S?.rules?.ticket || 5; for (let i = 0; i < n; i++) { if (S?.mode === 'challenge') send({ type: 'gift', user: freshUser(), giftName: 'Rose', coins: C, total: C, repeat: C, final: true }); else send({ type: 'chat', user: freshUser(), text: S?.mode === 'teams' ? pick(['rosu', 'albastru', 'red', 'blue', 'hai']) : 'hai!' }); } },
+  tap: n => { const u = user(false); let left = n; while (left > 0) { const c = Math.min(50, left); send({ type: 'like', user: u, count: c }); left -= c; } },
+  follow: () => send({ type: 'follow', user: user(false) }),
+  share: () => send({ type: 'share', user: user(false) }),
+  gift: v => gift(v),
+  giftCustom: () => gift(Math.max(1, Math.round(+$('#coins').value || 1)), ($('#giftName').value || 'Gift').trim()),
+  ticket: () => { const C = S?.rules?.ticket || 5; send({ type: 'gift', user: user(true), giftName: 'Rose', coins: C, total: C, repeat: C, final: true }); },
+  fan: () => { const u = user(true), b = 1 + ((Math.random() * Math.max(1, S?.bibSeq || 1)) | 0); send({ type: 'chat', user: u, text: '#' + b }); for (let i = 0; i < 3; i++) send({ type: 'like', user: u, count: 15 }); },
+  team: v => send({ type: 'chat', user: user(true), text: v }),
+};
+document.addEventListener('click', e => { const b = e.target.closest('button[data-a]'); if (!b) return; const v = b.dataset.v; A[b.dataset.a](v === undefined ? undefined : isNaN(+v) ? v : +v); });
+document.addEventListener('change', e => {
+  const el = e.target;
+  if (el.dataset.r) control('rules', { rules: { [el.dataset.r]: +el.value } });
+  else if (el.dataset.c === 'lang') control('cmd', { text: '!lang ' + el.value });
+  else if (el.dataset.c === 'time') control('time', { value: el.value });
+});
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'cmdIn') A.cmd(); if (e.key === 'Enter' && e.target.id === 'text') A.chat(); });
+
+function render() {
+  if (!S) return;
+  $('#st').textContent = `${MODE_NAME[S.mode]}${S.pendingMode ? ' → ' + MODE_NAME[S.pendingMode] : ''} · ${PHASE[S.phase]}${S.phase === 'race' ? ' · ' + Math.floor(S.phaseT / 60) + ':' + String(S.phaseT % 60).padStart(2, '0') : ''} · Runda ${S.round} · 🏃 ${S.players}${S.crowd ? ' (+' + S.crowd + ' în tribună)' : ''}${S.mode === 'challenge' ? ' · 👀 ' + S.viewers : ''}${S.phase === 'lobby' && S.roundT ? ' · cursa va dura ' + S.roundT + 's' : ''} · ${S.fps ?? '?'} FPS${S.quality ? ' (calitate redusă ' + S.quality + '/4)' : ''}${S.phase === 'lobby' && S.need ? ` · ⏳ mai trebuie ${S.need} ${S.mode === 'challenge' ? 'cu bilet' : S.mode === 'teams' ? 'în echipe (fiecare echipă are nevoie de oameni)' : 'jucători'} (sau „Start acum”)` : ''}`;
+  for (const g of document.querySelectorAll('.gm')) g.classList.toggle('cur', g.dataset.g === S.mode);
+  for (const b of document.querySelectorAll('#modes button')) b.classList.toggle('cur', b.dataset.v === S.mode);
+  // live cu joc fix (lives/*.json "lockMode"): butoanele de joc sunt blocate
+  for (const b of document.querySelectorAll('#modes button')) b.disabled = !!S.locked && b.dataset.v !== S.mode;
+  $('#lockNote').style.display = S.locked ? '' : 'none';
+  document.title = `🎛️ Panou – ${MODE_NAME[S.mode] || ''}${S.liveName ? ' – ' + S.liveName : ''}`;
+  for (const el of document.querySelectorAll('[data-r]')) if (document.activeElement !== el && S.rules[el.dataset.r] !== undefined) el.value = S.rules[el.dataset.r];
+  if (document.activeElement !== $('#lang')) $('#lang').value = S.lang;
+  if (document.activeElement !== $('#time')) $('#time').value = S.time == null ? '' : S.time;
+  $('#pauseBtn').textContent = S.paused ? '▶ Reia' : '⏸ Pauză'; $('#pauseBtn').classList.toggle('red', S.paused);
+  $('#muteBtn').textContent = S.muted ? '🔇 Sunet oprit' : '🔊 Sunet'; $('#muteBtn').classList.toggle('red', S.muted);
+  $('#top5').innerHTML = (S.top || []).map((p, i) => `<div><span>${i + 1}. ${p.name.replace(/[<>&]/g, '')}</span><span>${p.out ? '💀' : p.fin ? '🏁' : Math.max(0, p.d) + ' m'}</span></div>`).join('');
+}
+setInterval(() => {
+  if (!autoOn || !S || S.paused) return;
+  const r = Math.random();
+  if (S.mode === 'challenge' && S.players < 10 && r < 0.12) A.ticket();
+  else if (S.mode === 'challenge' && r < 0.3) A.fan();
+  else if (S.players < 30 && r < 0.2) S.mode === 'teams' ? A.team(pick(['rosu', 'albastru'])) : A.join(1);
+  else if (r < 0.9) send({ type: 'like', user: existingUser(), count: 1 + ((Math.random() * 12) | 0) });
+  else if (r < 0.98) gift(Math.random() < 0.75 ? 1 : 10);
+  else gift(Math.random() < 0.8 ? 100 : 500);
+}, 400);
+document.addEventListener('click', e => { if (e.target.id === 'pwBtn') { const v = $('#pw').value; localStorage.setItem('turbo-pw', v); sendRaw({ type: 'auth', password: v }); } });
+function showTunnel(u) {
+  $('#shareOn').style.display = u ? '' : 'none'; $('#shareOff').style.display = u ? 'none' : '';
+  if (u) { $('#lnkGame').value = u + '/'; $('#lnkPanel').value = u + '/panel.html'; }
+}
+document.addEventListener('click', e => { const id = e.target.dataset?.copy; if (!id) return; const el = $('#' + id); el.select(); navigator.clipboard?.writeText(el.value).catch(() => document.execCommand('copy')); e.target.textContent = '✅ Copiat'; setTimeout(() => e.target.textContent = '📋 Copiază', 1500); });
+if (!['localhost', '127.0.0.1'].includes(location.hostname)) $('#shareBox').style.display = 'none';
+connect();
+// linkul pentru sursa "Link" din TikTok LIVE Studio: LIVE Studio cere https, deci linkul vine prin tunel (fereastra TUNEL)
+function showLiveLink(u) { $('#liveUrl').value = u || '⏳ porneste tunelul (START.bat il porneste singur)…'; $('#copyUrl').disabled = !u; }
+showLiveLink('');
+$('#copyUrl').onclick = () => { $('#liveUrl').select(); navigator.clipboard?.writeText($('#liveUrl').value).catch(() => document.execCommand('copy')); $('#copyUrl').textContent = '✅ Copiat'; setTimeout(() => $('#copyUrl').textContent = '📋 Copiază', 1500); };
+</script>
+</body>
+</html>

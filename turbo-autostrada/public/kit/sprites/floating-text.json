@@ -1,0 +1,154 @@
+{
+ "frames": {
+  "floats/float-+156-m": {
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 272,
+    "h": 68
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 28,
+    "y": 16,
+    "w": 272,
+    "h": 68
+   },
+   "sourceSize": {
+    "w": 320,
+    "h": 96
+   }
+  },
+  "floats/float-scut": {
+   "frame": {
+    "x": 276,
+    "y": 0,
+    "w": 230,
+    "h": 67
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 51,
+    "y": 16,
+    "w": 230,
+    "h": 67
+   },
+   "sourceSize": {
+    "w": 320,
+    "h": 96
+   }
+  },
+  "floats/float-serie-x10": {
+   "frame": {
+    "x": 510,
+    "y": 0,
+    "w": 294,
+    "h": 67
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 19,
+    "y": 16,
+    "w": 294,
+    "h": 67
+   },
+   "sourceSize": {
+    "w": 320,
+    "h": 96
+   }
+  },
+  "floats/float-+1": {
+   "frame": {
+    "x": 808,
+    "y": 0,
+    "w": 147,
+    "h": 67
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 90,
+    "y": 16,
+    "w": 147,
+    "h": 67
+   },
+   "sourceSize": {
+    "w": 320,
+    "h": 96
+   }
+  },
+  "floats/float-1": {
+   "frame": {
+    "x": 0,
+    "y": 72,
+    "w": 161,
+    "h": 64
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 83,
+    "y": 18,
+    "w": 161,
+    "h": 64
+   },
+   "sourceSize": {
+    "w": 320,
+    "h": 96
+   }
+  },
+  "floats/float-+3-m": {
+   "frame": {
+    "x": 381,
+    "y": 72,
+    "w": 212,
+    "h": 62
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 58,
+    "y": 21,
+    "w": 212,
+    "h": 62
+   },
+   "sourceSize": {
+    "w": 320,
+    "h": 96
+   }
+  },
+  "floats/float-8-fani": {
+   "frame": {
+    "x": 597,
+    "y": 72,
+    "w": 232,
+    "h": 57
+   },
+   "rotated": false,
+   "trimmed": true,
+   "spriteSourceSize": {
+    "x": 48,
+    "y": 20,
+    "w": 232,
+    "h": 57
+   },
+   "sourceSize": {
+    "w": 320,
+    "h": 96
+   }
+  }
+ },
+ "meta": {
+  "app": "TURBOSTRADA kit",
+  "image": "floating-text.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 1024,
+   "h": 136
+  },
+  "scale": "1"
+ }
+}

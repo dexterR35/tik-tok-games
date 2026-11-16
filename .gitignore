@@ -1,17 +1,41 @@
-# Local dependencies and tooling
+# Installed dependencies and caches
 node_modules/
-.venv/
+node_modules.reference/
+.npm/
+.cache/
 __pycache__/
-*.log
-coverage/
+*.pyc
 
-# Local configuration and credentials
+# Local settings and credentials
 .env
 .env.*
 !.env.example
+/turbo-autostrada/config.json
+/turbo-autostrada/lives/*.json
+!/turbo-autostrada/lives/*.example.json
+
+# Runtime state and logs
+data/
+logs/
+*.log
+artifacts/
+.openai/
+
+# Local backups, exports, and downloaded helpers
+backup-*/
+*.bak
+*.bak-*
+*.blend1
+*.blend2
+*.zip
+*.7z
+*.tar.gz
+*.exe
+/*.jpg
 
 # Editor and OS files
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
+Desktop.ini

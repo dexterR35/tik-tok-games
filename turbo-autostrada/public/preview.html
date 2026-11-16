@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ro"><head><meta charset="utf-8"><title>Previzualizare TikTok – TURBOSTRADA</title>
+<style>
+  body { margin:0; background:#0c0a1a; color:#fff; font:600 14px/1.4 'Segoe UI', sans-serif; display:flex; gap:24px; padding:20px; align-items:flex-start; }
+  .phone { height:calc(100vh - 40px); aspect-ratio:9/16; border-radius:28px; border:6px solid #222; overflow:hidden; background:#000; flex:none; }
+  iframe { width:100%; height:100%; border:0; display:block; }
+  .side { max-width:360px; } h1 { font-size:18px; margin:0 0 10px; } p { opacity:.85; } label { display:block; margin:8px 0; }
+  code { background:#221d3b; padding:1px 5px; border-radius:4px; }
+</style></head>
+<body>
+  <div class="phone"><iframe id="f"></iframe></div>
+  <div class="side">
+    <h1>📱 Cum arată jocul pe telefonul spectatorilor</h1>
+    <p>Zonele roșii sunt acoperite de TikTok (gazda și spectatorii sus, comentariile jos-stânga, butoanele jos). Pozițiile sunt aproximative și pot varia puțin de la un telefon la altul.</p>
+    <p>Aici rulează o <b>copie</b> a jocului doar pentru privit: primește aceleași evenimente, dar nu se capturează în live și nu schimbă nimic.</p>
+    <label><input type="checkbox" id="g" checked> arată butoanele TikTok</label>
+    <p>Imaginea 3D se mută în sus cu <code>TIKTOK_SAFE_SHIFT</code> din <code>public/js/rules.js</code>.</p>
+  </div>
+<script>
+  const f = document.getElementById('f'), g = document.getElementById('g');
+  const load = () => { f.src = '/?preview=1&sound=0' + (g.checked ? '&tiktok=1' : '') + (location.search ? '&' + location.search.slice(1) : ''); };
+  g.onchange = load; load();
+</script>
+</body></html>

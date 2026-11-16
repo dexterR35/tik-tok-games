@@ -1,0 +1,20 @@
+{
+  "name": "turbo-autostrada",
+  "version": "1.0.0",
+  "description": "Joc runner 3D pentru TikTok LIVE",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "garage": "node garage-server.js",
+    "test:garage": "node --test tests/garage.test.mjs tests/live-game.test.mjs tests/duel-race.test.mjs tests/physics.test.mjs"
+  },
+  "dependencies": {
+    "@fontsource/lilita-one": "^5.2.0",
+    "@fontsource/nunito": "^5.2.0",
+    "express": "^5.1.0",
+    "three": "^0.187.0",
+    "tiktok-live-connector": "^2.5.0",
+    "ws": "^8.18.0"
+  }
+}

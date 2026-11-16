@@ -1,0 +1,25 @@
+{
+  "author": "Dream Garage / original procedural Blender models",
+  "models": [
+    "workshop.glb",
+    "district.glb",
+    "coachwork.glb",
+    "parts.glb"
+  ],
+  "parts": [
+    "turbo",
+    "wheels",
+    "tires",
+    "brakes",
+    "suspension",
+    "exhaust",
+    "nitrous",
+    "aero",
+    "paint",
+    "transmission",
+    "ecu",
+    "cooling",
+    "lighting"
+  ],
+  "source": "dream-garage-assets.blend"
+}

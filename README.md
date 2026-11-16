@@ -1,51 +1,133 @@
-# tik-tok-games
+# TikTok LIVE Games
 
-A browser arcade for TikTok LIVE with an avatar printer and eight multiplayer games.
+**One audience. Six ways to play.**
 
-## Play locally
+A collection of browser games for portrait TikTok LIVE streams: crowd-powered street racing, a match reactor, an autonomous city drive, a robot adventure, a highway runner, and a community-built garage.
 
-Open `dist/index.html` in Edge or Chrome. Choose **Dragon Raid** or any other game and select **Start demo**. The demo sends taps and gifts automatically. Use **Tap ×10** and **Gift** to add your own. In **Print**, select **Send test gift** to try the portrait queue.
+Built with **JavaScript, Three.js, and Node.js**. Run each game locally, try its demo or host controls, and capture the portrait view in OBS or TikTok LIVE Studio.
 
-If your browser restricts the local connection when opening the file directly, run this from the repository folder and open [the arcade on localhost](http://127.0.0.1:8765/).
+## Screenshots
+
+Existing project captures show the game and host interfaces. The Dream Garage image shows its workshop sandbox; its current LIVE game has a separate portrait view.
+
+<table>
+  <tr>
+    <th>NIGHTSHIFT — crowd-powered street racing</th>
+    <th>Prism Rush — the community match reactor</th>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/nightshift-racing.jpg" alt="NIGHTSHIFT racing with a Porsche, crowd controls, and the unlockable garage" width="600"></td>
+    <td><img src="docs/screenshots/prism-rush.jpg" alt="Prism Rush gem board, team score, viewer powers, and leaderboard" width="600"></td>
+  </tr>
+  <tr>
+    <th>Dream Garage — workshop sandbox</th>
+    <th>TURBOSTRADA — portrait highway race</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/dream-garage-workshop.jpg" alt="Dream Garage workshop showing a project car, upgrades, and simulated community contributions" height="400"></td>
+    <td align="center"><img src="docs/screenshots/turbostrada.jpg" alt="TURBOSTRADA night race with viewer avatars and a leaderboard" height="400"></td>
+  </tr>
+</table>
+
+## Choose a game
+
+| Game | What happens | Start on Windows | Guide |
+| --- | --- | --- | --- |
+| **NIGHTSHIFT** | One crowd-powered supercar races three automatic rivals. Taps build speed; gifts trigger boosts; points unlock cars. | `nightshift-racing/START-NIGHTSHIFT.bat` | [Racing, garage, and LIVE setup](nightshift-racing/README.md) |
+| **Prism Rush** | A shared 3D gem board runs smart swaps and cascades. Viewers charge moves, meteors, prisms, and supernovas. | `prism-rush/START.bat` | [Powers, host controls, and relay](prism-rush/README.md) |
+| **Echo Rescue** | E-07 explores five floating worlds on autopilot. Gifts build bridges and grant powers; each action returns once as an echo. | `echo-rescue/START.bat` | [Worlds, progression, and viewer actions](echo-rescue/README.md) |
+| **Autodrive Live** | An autonomous car explores a fictional city, follows traffic signals, changes lanes, and responds to audience boosts. | `nightdrive-live/START-AUTODRIVE.bat` | [Driving modes and LIVE setup](nightdrive-live/README.md) |
+| **TURBOSTRADA** | Viewer avatars run a highway course in Classic, Challenge, Teams, or Elimination mode. | `turbo-autostrada/START.bat` | [Runner setup and modes — Romanian](turbo-autostrada/CITESTE.md) |
+| **Dream Garage LIVE** | The audience funds a project car, installs upgrades, and helps it win automatic 400 m duels. | `turbo-autostrada/DREAM-GARAGE.bat` | [LIVE game](turbo-autostrada/DREAM-GARAGE.md) · [Workshop sandbox](turbo-autostrada/DREAM-GARAGE-WORKSHOP.md) |
+
+## Run locally
+
+Use **Node.js 22 or newer** and Edge or Chrome with WebGL2 and hardware acceleration. Windows launchers are included; the Node servers can also be started from a terminal.
+
+Clone the collection:
 
 ```powershell
-python -m http.server 8765 --bind 127.0.0.1 --directory dist
+git clone https://github.com/dexterR35/tik-tok-games.git
+cd tik-tok-games
 ```
 
-## Play on TikTok LIVE
+Choose one game folder, then run its commands:
 
-1. Connect [TikFinity Desktop](https://tikfinity.zerody.one/tiktok/obsoverlays) to your LIVE on the same computer as the arcade.
-2. In the arcade, select **Connect TikFinity**. Once it shows **Connected**, select a game and choose **Start LIVE round**. The Print workshop accepts eligible gifts while its tab is open.
-3. Viewers can type `!join`, tap the LIVE, or send a gift. In **Color Duel**, type `!red` or `!blue` before your first action to pick a team.
-4. Use **Stream mode** for OBS or TikTok LIVE Studio capture. Press **Esc** to return to the controls. Switching games ends the active round and keeps its result until the next round in that game.
+| Folder | Terminal commands | Local game |
+| --- | --- | --- |
+| `nightshift-racing` | `npm install`, then `npm start` | `http://127.0.0.1:3316` |
+| `prism-rush` | `npm run serve` — bundled assets, no install needed | `http://127.0.0.1:4328` |
+| `echo-rescue` | `npm start` — bundled assets, no install needed | `http://127.0.0.1:4317` |
+| `nightdrive-live` | `npm install`, then `npm start` | `http://127.0.0.1:4316` |
+| `turbo-autostrada` | Copy the configuration below, run `npm install`, then `npm start` | `http://127.0.0.1:3000` |
+| `turbo-autostrada` — Dream Garage | `npm install`, then `npm run garage` | `http://127.0.0.1:3210` |
 
-## Raid countdown and Hero
+For example, start NIGHTSHIFT from the repository root:
 
-**Boss Raid** and **Dragon Raid** lock their difficulty at the start of each round. Leave **Raid viewer estimate** on Auto to use the latest TikFinity viewer count. Enter a number to size the raid for the people you expect to play. Auto uses one viewer if the LIVE count is unavailable and four in demo mode.
+```powershell
+cd nightshift-racing
+npm install
+npm start
+```
 
-- Enemy HP and dragon armor scale by the square root of the viewer estimate, rounded to whole points. Scaling uses up to 100 viewers.
-- The countdown starts at 60 seconds and drops by about five seconds each time the viewer count doubles, with a 35-second minimum.
-- One tap deals one damage. Dragon damage breaks armor before reducing HP. Gifts deal bonus damage. The final result names the highest-damage player as **Hero**, with leaderboard order breaking ties.
+NIGHTSHIFT includes its playable `dist` files. Run `npm run build` in that folder to refresh its bundled graphics modules after changing dependencies. Prism Rush also provides `npm run build` for its standalone static demo. These are independent projects, with no root install or root build command.
 
-| Viewers used | Countdown | Boss HP | Dragon HP | Dragon armor |
-| ---: | ---: | ---: | ---: | ---: |
-| 1 | 60 s | 240 | 260 | 90 |
-| 4 | 50 s | 480 | 520 | 180 |
-| 16 | 40 s | 960 | 1,040 | 360 |
-| 32 | 35 s | 1,358 | 1,471 | 509 |
+### TURBOSTRADA configuration
 
-The arcade queues viewer actions in arrival order and processes them in batches. A like packet can represent several taps, with up to 500 counted per packet. Each action retains its viewer and arrival time, so taps received before the deadline can still score while the queue drains. Repeated event IDs are filtered when available. Actions stop scoring when the round ends.
+From `turbo-autostrada`, create your private configuration:
 
-## Games
+```powershell
+Copy-Item config.example.json config.json
+npm install
+npm start
+```
 
-| Game | Goal |
+Set your TikTok username and panel password in `config.json` before connecting or sharing access. Signing keys, if needed, belong in that private file. Local configurations, saves, and logs are ignored by Git.
+
+For the four separate runner launchers, first copy the per-stream templates:
+
+```powershell
+Copy-Item lives/clasic.example.json lives/clasic.json
+Copy-Item lives/challenge.example.json lives/challenge.json
+Copy-Item lives/echipe.example.json lives/echipe.json
+Copy-Item lives/eliminare.example.json lives/eliminare.json
+```
+
+Set the intended username in each file, then use `LIVE-1-CLASIC.bat` through `LIVE-4-ELIMINARE.bat`. Their ports are **3001–3004**. See [CITESTE.md](turbo-autostrada/CITESTE.md) for the full setup.
+
+## Capture the game
+
+Use a **1080 × 1920** portrait browser source, or capture the game window. Start the local server first and keep it running throughout the broadcast.
+
+| Game | Clean capture URL |
 | --- | --- |
-| Print | Eligible gifts queue portraits. Set the minimum diamond value in **Gifts**. Completed gift streaks count as one portrait. Initials are drawn when a profile image is unavailable. |
-| Turbo Sprint | Tap to race to 1,000 m in 30 seconds. Gifts trigger turbo. |
-| LIVE Tower | Build 24 blocks in 35 seconds. Every 10 team taps add a block. Gifts add 2 to 4. |
-| Boss Raid | Defeat the robot before time runs out. Gifts deal 18, 30, or 42 damage. |
-| Dragon Raid | Break the dragon's armor, then defeat it. Gifts deal up to 76 damage. |
-| Meteor Shield | Protect the base through seven impacts, one every five seconds. Taps charge the shield and gifts repair the base. |
-| Color Duel | Build a 120-point lead or lead at the end of 35 seconds. |
-| LIVE Vault | Open three locks in 35 seconds. Each lock takes 55 tap points. Gifts add at least 55 points. |
-| Orbital Rescue | Fuel the shuttle, rescue three pods, and reach the end of the route in 40 seconds. Gifts refuel and boost the shuttle. |
+| NIGHTSHIFT | `http://127.0.0.1:3316/?broadcast=1` |
+| Prism Rush | `http://127.0.0.1:4328/?capture=1` |
+| Echo Rescue | `http://127.0.0.1:4317/?capture=1` |
+| Autodrive Live | `http://127.0.0.1:4316/?capture=1` |
+| TURBOSTRADA | `http://127.0.0.1:3000/?live=1` — use your stream's port for separate launchers |
+| Dream Garage LIVE | `http://127.0.0.1:3210/?source=1` |
+
+## Connect your audience
+
+**NIGHTSHIFT, Autodrive Live, and TURBOSTRADA** include local bridges based on the unofficial `tiktok-live-connector`. Use the intended creator account while it is LIVE.
+
+**Echo Rescue, Prism Rush, and Dream Garage LIVE** can receive normalized viewer events through the TURBOSTRADA relay. Start the relay with `node server.js YOUR_TIKTOK_USERNAME` from `turbo-autostrada`, then connect the game through its host panel. Its default WebSocket address is `ws://localhost:3000/ws`.
+
+Demo controls simulate local actions and do not send paid gifts. Static hosted demos do not run a local LIVE bridge. Real TikTok connectivity depends on the connector and service configuration; an on-air test is still required. A connected relay alone does not confirm that an account is LIVE.
+
+## Development
+
+Run checks from the project you are working on:
+
+| Project | Test command |
+| --- | --- |
+| Echo Rescue | `npm test` |
+| Autodrive Live | `npm test` |
+| NIGHTSHIFT | `npm test` |
+| Prism Rush | `npm test` |
+| Dream Garage | `npm run test:garage` in `turbo-autostrada` |
+
+The repository includes the games, bundled browser assets, original asset sources where available, and screenshots. Installed dependencies, personal settings, saved sessions, deployment archives, and local backups stay on your computer.
+
+Third-party assets retain their own licenses and attributions. See [NIGHTSHIFT model credits](nightshift-racing/dist/assets/model-attributions.json), [Autodrive asset credits](nightdrive-live/public/assets/CREDITS.md), [Echo Rescue vendor notes](echo-rescue/public/vendor/README.txt), and [Dream Garage asset notes](turbo-autostrada/public/garage/assets/ASSET-NOTES.md).

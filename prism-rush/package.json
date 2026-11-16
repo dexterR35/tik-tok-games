@@ -1,0 +1,14 @@
+{
+  "name": "prism-rush-live",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A portrait 3D match reactor for TikTok LIVE",
+  "scripts": {
+    "start": "node server.js --open",
+    "serve": "node server.js",
+    "test": "node --test",
+    "build": "node build.js"
+  },
+  "engines": { "node": ">=22" }
+}
