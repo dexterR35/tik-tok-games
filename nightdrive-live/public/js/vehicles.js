@@ -51,7 +51,7 @@ function wheelGeometry(rubber,rim,brake){
 }
 export function createVehicleLibrary(){
   const material={paint:matte(0xffffff,.9),trim:matte(0x252d31),rubber:matte(0x182125,.98),glass:matte(0x334653,.67),rim:matte(0x788083,.77),seam:matte(0x343b3c),red:matte(0xb84231,.8),light:matte(0xb9c7cc,.8),amber:matte(0xb9904e),brake:matte(0x4e575b)};
-  material.red.emissive.setHex(0x6a1109);material.red.emissiveIntensity=.2;
+  material.red.emissive.setHex(0xff2a12);material.red.emissiveIntensity=.12;material.light.emissive.setHex(0xfff1d6);material.light.emissiveIntensity=0;
   const wheel=wheelGeometry(material.rubber,material.rim,material.brake);
   const models=[];
   for(let style=0;style<3;style++){
@@ -83,7 +83,8 @@ export function createVehicleLibrary(){
     const body=b.finish();body.userData.name=style===0?'ATLAS S4':style===1?'ATLAS TOURING':'METRO C2';
     models.push({body,wheelPositions:[[-.91,.345,-1.38],[.91,.345,-1.38],[-.91,.345,1.38],[.91,.345,1.38]],wheel});
   }
-  const hero=new THREE.Group(),heroBody=models[0].body.clone();heroBody.traverse(o=>{if(o.isMesh&&o.material===material.paint){o.material=material.paint.clone();o.material.color.setHex(CAR_COLORS[0]);}});hero.add(heroBody);
+  const heroMaterials={red:material.red.clone(),light:material.light.clone()};heroMaterials.light.emissive.setHex(0xfff3dc);heroMaterials.light.emissiveIntensity=0;
+  const hero=new THREE.Group(),heroBody=models[0].body.clone();heroBody.traverse(o=>{if(!o.isMesh)return;if(o.material===material.paint){o.material=material.paint.clone();o.material.color.setHex(CAR_COLORS[0]);}else if(o.material===material.red)o.material=heroMaterials.red;else if(o.material===material.light)o.material=heroMaterials.light;});hero.add(heroBody);
   const heroWheels=[];for(const p of models[0].wheelPositions){const w=wheel.clone();w.position.set(...p);hero.add(w);heroWheels.push(w);}
   const plate=new THREE.Mesh(new THREE.PlaneGeometry(.43,.11),new THREE.MeshBasicMaterial({map:plateTexture()}));plate.position.set(0,.53,2.31);hero.add(plate);
   // Traffic is submitted in a handful of instanced draws instead of repeating
@@ -95,5 +96,5 @@ export function createVehicleLibrary(){
     for(const p of model.wheelPositions)wheel.traverse(o=>{if(o.isMesh)full.add(o.geometry.clone(),o.material,new THREE.Matrix4().makeTranslation(...p));});
     const merged=full.finish();for(const mesh of merged.children)trafficParts.push({geometry:mesh.geometry,material:mesh.material,style,paint:mesh.material===material.paint});
   }
-  return {hero,heroWheels,trafficParts,materials:material,name:'ATLAS S4',triangleCount:trafficParts.filter(p=>p.style===0).reduce((n,p)=>n+p.geometry.getAttribute('position').count/3,0)};
+  return {hero,heroWheels,heroMaterials,trafficParts,materials:material,name:'ATLAS S4',triangleCount:trafficParts.filter(p=>p.style===0).reduce((n,p)=>n+p.geometry.getAttribute('position').count/3,0)};
 }

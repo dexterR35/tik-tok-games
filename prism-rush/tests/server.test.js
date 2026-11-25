@@ -25,6 +25,8 @@ test('HTTP, shared state, command security and actual WebSocket relay delivery',
   assert.match((await fetch(url + '/vendor/three.module.js')).headers.get('content-type'), /javascript/);
   const blocked = await fetch(url + '/api/command', { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: 'https://unrelated.example' }, body: JSON.stringify({ action: 'pause' }) }); assert.equal(blocked.status, 403);
   await command({ action: 'demo', value: false }); await command({ action: 'pause' });
+  await command({ action: 'tap', count: 700, name: 'Old test' });
+  await command({ action: 'power', power: 'rose', name: 'Old test' });
   const first = await (await fetch(url + '/api/state')).json(), second = await (await fetch(url + '/api/state')).json();
   assert.equal(first.paused, true); assert.deepEqual(first.board, second.board); assert.equal(first.phase.id, second.phase.id);
   const stream = await fetch(url + '/api/events'), reader = stream.body.getReader(); const chunk = await reader.read(); assert.match(new TextDecoder().decode(chunk.value), /"paused":true/); await reader.cancel();
@@ -38,6 +40,7 @@ test('HTTP, shared state, command security and actual WebSocket relay delivery',
   await command({ action: 'connect', url: `ws://127.0.0.1:${relay.address().port}/ws` });
   let live;
   for (let i = 0; i < 40; i++) { live = await (await fetch(url + '/api/state')).json(); if (live.live.live) break; await delay(50); }
-  assert.equal(live.live.live, true); assert.equal(live.live.username, 'relay-test'); assert.equal(live.settings.demo, false); assert.equal(live.tapCharge, 25); assert.equal(live.queueUnits, 3); assert.deepEqual(live.queue.map(a => a.type), ['tap', 'prism']);
+  assert.equal(live.live.live, true); assert.equal(live.live.username, 'relay-test'); assert.equal(live.settings.demo, false); assert.equal(live.taps.received, 125); assert.equal(live.taps.played + live.taps.pending, 125); assert.ok(live.queueUnits <= 2); assert.ok(live.people || true);
+  assert.equal(live.participants, 1); assert.equal(live.taps.pending, 125); assert.equal(live.jokersWaiting, 2);
   await command({ action: 'disconnect' }); const disconnected = await (await fetch(url + '/api/state')).json(); assert.equal(disconnected.live.live, false); assert.equal(disconnected.settings.reconnect, false);
 });

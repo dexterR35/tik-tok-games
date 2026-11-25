@@ -1,9 +1,9 @@
 export async function connectGame(onState, onConnection = () => {}) {
   let local = false;
-  try { const response = await fetch('/api/health', { signal: AbortSignal.timeout(2500) }); if (response.ok) local = (await response.json()).game === 'prism-rush'; } catch {}
+  try { const response = await fetch('/api/health', { signal: AbortSignal.timeout(5000) }); if (response.ok) local = (await response.json()).game === 'prism-rush'; } catch {}
   if (local) {
     const stream = new EventSource('/api/events');
-    stream.onmessage = e => { try { onState(JSON.parse(e.data)); onConnection(true); } catch {} };
+    stream.onmessage = e => { let state; try { state = JSON.parse(e.data); } catch { return; } try { onState(state); } catch (error) { console.error('Render error:', error); } onConnection(true); };
     stream.onerror = () => onConnection(false);
     return { local: true, send: async command => {
       const response = await fetch('/api/command', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(command) });

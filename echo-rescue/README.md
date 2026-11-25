@@ -2,6 +2,11 @@
 
 A portrait 3D game for a TikTok LIVE stream. E-07 moves automatically, viewers send gifts to change the course, and each action returns once as a ghost effect. The game fills the capture frame with its 3D world and game HUD. Host controls run in a separate window.
 
+## Screenshot
+
+<img src="../docs/screenshots/echo-rescue.jpg" alt="E-07 on a floating rescue route with viewer gift controls" width="420">
+
+
 ## Launch the game
 
 Requires Node.js 22 or newer and Microsoft Edge or Google Chrome with WebGL2/hardware acceleration.

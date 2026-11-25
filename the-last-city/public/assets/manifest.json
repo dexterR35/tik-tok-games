@@ -1,0 +1,8 @@
+{
+  "image": "kingdom-atlas.png",
+  "layout": { "columns": 4, "rows": 4, "width": 1254, "height": 1254 },
+  "origin": "Built-in imagegen, generated for The Last City, 2026-11-25; background extraction pass",
+  "cells": ["castle", "cottage", "windmill", "barracks", "pines", "oak", "tower", "cannon", "archer", "captain", "worker", "mage", "walker", "runner", "brute", "boss"],
+  "animation": { "image": "character-cycles.png", "columns": 8, "rows": 6, "width": 1448, "height": 1086, "rowNames": ["walker", "runner", "brute", "boss", "worker", "archer"], "frames": 48, "movement": "Distance-driven frame selection with fixed row scale and per-frame foot anchors; archer windup and release are simulation-driven" },
+  "unusedInGame": ["oak", "captain", "mage"]
+}

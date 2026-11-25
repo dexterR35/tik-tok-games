@@ -2,6 +2,11 @@
 
 Spectatorii intră în cursă cu avatarul lor și aleargă pe o autostradă prin oraș. Aleargă singuri: sar peste bariere, alunecă pe sub bare și ocolesc mașinile. Tu doar transmiți live.
 
+## Screenshot
+
+<img src="../docs/screenshots/turbostrada.jpg" alt="Portrait highway runner with viewer avatars and leaderboard" width="420">
+
+
 ## 4 live-uri, 4 jocuri (un live = un joc)
 Poți rula fiecare joc pe live-ul lui: toate 4 deodată, pe 4 conturi TikTok, sau doar pe cel de azi.
 

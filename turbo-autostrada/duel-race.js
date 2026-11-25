@@ -26,13 +26,59 @@ export const DUEL = {
   BASE_POWER_TO_WEIGHT: 205 * .82 / 1260, // the starter car: scale = 1
 };
 
+// CLOSE RACING (the rival "stays in the pack")
+// The rival still drives its own pace (the reference × 1 ± 5%), but it reacts to the race like a real driver:
+//  - when you pull away (taps, gifts, nitrous) it pushes after you - LATE (RESPONSE) and with LESS (CHASE_MAX) - and it
+//    only closes to a few metres behind you (CHASE_FAR → CHASE_NEAR as the line gets closer); chasing can never pass you.
+//  - when it is far ahead it lifts a little so the crew always sees a catchable car (LEAD_FAR → LEAD_NEAR), and the time
+//    it gave away comes back only slowly (RECOVER), so it can still win if the crew stops - but never by a mile.
+// Result: without help the faster rival still wins and the slower one still loses, help still wins the race,
+// and the finish is almost always a few metres - a real duel instead of a car disappearing off screen.
+export const PACK = {
+  CHASE_FAR: 5, CHASE_NEAR: 1.1,   // metres the rival may trail you by before it pushes (start → finish line)
+  LEAD_FAR: 6, LEAD_NEAR: 2.2,     // metres the rival may lead by before it lifts
+  CHASE_GAIN: .9, CHASE_MAX: .55,  // push: m/s per metre of extra gap, capped at 55% of its own speed
+  EASE_GAIN: .5, EASE_MAX: .07,    // lift: m/s per metre, at most 7% of its own speed
+  RECOVER: .035,                   // after lifting it wins back at most 3.5% of its speed
+  RESPONSE: 1.3,                   // 1/s: how fast the rival reacts (lower = later)
+  FINAL_SQUEEZE: 1.6,              // ...and up to 2.6× quicker on the run to the line
+  CLEARANCE: .6,                   // chasing stops this far behind your rear bumper
+};
+
+function packRival(duel, step, previous) {
+  const r = duel.rival, run = duel.player, target = duel.distance ?? 400;
+  const base = duel.reference.distance * r.factor, baseSpeed = duel.reference.speed * r.factor;
+  r.extra ??= 0; r.push ??= 0;
+  const progress = Math.min(1, run.distance / target), far = 1 - progress;
+  const gap = run.distance - (base + r.extra), chaseGap = PACK.CHASE_NEAR + (PACK.CHASE_FAR - PACK.CHASE_NEAR) * far, leadGap = PACK.LEAD_NEAR + (PACK.LEAD_FAR - PACK.LEAD_NEAR) * far;
+  const ref = Math.max(baseSpeed, 8);
+  let want = 0;
+  if (!run.finished) {
+    if (gap > chaseGap) want = Math.min(PACK.CHASE_MAX * ref, (gap - chaseGap) * PACK.CHASE_GAIN * (1 + progress));
+    else if (gap < -leadGap) want = Math.max(-PACK.EASE_MAX * ref, (gap + leadGap) * PACK.EASE_GAIN);
+    else if (r.extra < 0) want = Math.min(PACK.RECOVER * ref, -r.extra); // give back the lifted distance, slowly
+  }
+  if (r.extra < 0 && want > 0) want = Math.min(want, PACK.RECOVER * ref + Math.max(0, gap - chaseGap) * PACK.CHASE_GAIN * .5);
+  r.push += (want - r.push) * Math.min(1, step * PACK.RESPONSE * (1 + PACK.FINAL_SQUEEZE * progress * progress)); // reacts quicker in the final metres: photo finishes
+  r.extra += r.push * step;
+  if (!run.finished) {
+    // chasing can never put the rival in front; lifting can never drop it behind
+    const cap = run.distance - PACK.CLEARANCE - base, floor = run.distance + PACK.CLEARANCE - base;
+    if (r.extra > 0 && r.extra > Math.max(0, cap)) { r.extra = Math.max(0, cap); r.push = Math.min(r.push, Math.max(0, run.speed - baseSpeed)); }
+    if (r.extra < 0 && r.extra < Math.min(0, floor)) { r.extra = Math.min(0, floor); r.push = Math.max(r.push, Math.min(0, run.speed - baseSpeed)); }
+  }
+  r.baseDistance = base;
+  r.pushing = r.push > .6;
+  return { distance: base + r.extra, speed: Math.max(0, baseSpeed + r.push) };
+}
+
 export function createDuel(project, round = 1, difficulty = 'auto') {
   const offset = difficulty === 'easier' ? -DUEL.OFFSET : difficulty === 'harder' ? DUEL.OFFSET : round % 2 ? DUEL.OFFSET : -DUEL.OFFSET;
   const car = structuredClone(project);
   car.parts.nitrous = Math.max(1, car.parts.nitrous);
   const player = newRun(), st = stats(car);
   return { scale: Math.pow(st.hp * st.delivery / st.mass / DUEL.BASE_POWER_TO_WEIGHT, 2 / 3), tapBank: 0, giftBank: 0, car, player, reference: newRun('highway'), distance: raceDefinition(player.race).distance, clock: 0, tapAssist: 0, giftAssist: 0, taps: 0, gifts: 0, giftCoins: 0,
-    rival: { name: offset > 0 ? 'REDLINE' : 'SHADOW', offsetPercent: Math.round(offset * 100), factor: 1 + offset, speed: 0, distance: 0, time: 0, finished: false, color: offset > 0 ? '#e84b46' : '#599dc8' } };
+    rival: { name: offset > 0 ? 'REDLINE' : 'SHADOW', offsetPercent: Math.round(offset * 100), factor: 1 + offset, speed: 0, distance: 0, time: 0, finished: false, extra: 0, push: 0, pushing: false, baseDistance: 0, color: offset > 0 ? '#e84b46' : '#599dc8' } };
 }
 
 // moves as much banked energy into speed as the envelope allows right now; returns the speed gained (m/s)
@@ -85,8 +131,8 @@ export function advanceDuel(duel, seconds, charge = 0) {
     duel.tapAssist = Math.max(0, duel.tapAssist - step * DUEL.TAP_ASSIST_DECAY);
     duel.giftAssist = Math.max(0, duel.giftAssist - step * DUEL.GIFT_ASSIST_DECAY);
     if (!duel.rival.finished) {
-      const distance = duel.reference.distance * duel.rival.factor;
-      duel.rival.speed = duel.reference.speed * duel.rival.factor;
+      const { distance, speed } = packRival(duel, step, previousDistance);
+      duel.rival.speed = speed;
       duel.rival.distance = Math.min(target, distance);
       duel.rival.time = duel.clock + step;
       if (distance >= target) {

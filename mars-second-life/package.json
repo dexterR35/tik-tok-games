@@ -1,0 +1,16 @@
+{
+  "name": "mars-second-life",
+  "version": "1.0.0",
+  "description": "Second Life — Mars Edition: a living Mars colony for TikTok LIVE where gifts bring viewers into the scene",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "express": "5.1.0",
+    "three": "0.181.0",
+    "tiktok-live-connector": "2.5.0"
+  },
+  "type": "module",
+  "private": true
+}

@@ -8,6 +8,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { WebSocketServer } from 'ws';
 import { TikTokLiveConnection, WebcastEvent, ControlEvent } from 'tiktok-live-connector';
+import { likeCount, userOf } from './relay-input.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const cfgPath = path.join(__dirname, 'config.json');
@@ -251,16 +252,6 @@ wss.on('connection', (ws, req) => {
   });
 });
 
-function userOf(u) {
-  u = u || {};
-  const pic = u.profilePicture || u.avatarThumb || {};
-  return {
-    id: String(u.uniqueId || u.userId || 'anonim'),
-    name: String(u.nickname || u.uniqueId || 'anonim').slice(0, 24),
-    avatar: (pic.url && pic.url[0]) || (pic.urlList && pic.urlList[0]) || ''
-  };
-}
-
 // --- conexiunea TikTok LIVE
 const streaks = new Map(); // serii de gift-uri in curs: cheie -> { rep, at, user, name, diamonds }
 // o serie care nu mai primeste nimic 12 s se considera incheiata (TikTok nu trimite mereu "sfarsit"): se da puterea finala si se elibereaza memoria
@@ -306,7 +297,10 @@ async function connectTikTok() {
   const on = (ev, fn) => c.on(ev, d => { if (gen !== connGen) return; try { fn(d); } catch (e) { console.log('[tiktok ' + ev + ']', e?.message || e); } });
 
   on(WebcastEvent.CHAT, d => broadcast({ type: 'chat', user: userOf(d.user), text: String(d.comment || '').slice(0, 120), admin: isAdmin(d.user || {}) }));
-  on(WebcastEvent.LIKE, d => broadcast({ type: 'like', user: userOf(d.user), count: Math.min(500, Number(d.likeCount) || 1) }));
+  on(WebcastEvent.LIKE, d => {
+    const count = likeCount(d.likeCount);
+    if (count && firstTime(d)) broadcast({ type: 'like', user: userOf(d.user), count });
+  });
   on(WebcastEvent.FOLLOW, d => broadcast({ type: 'follow', user: userOf(d.user) }));
   on(WebcastEvent.SHARE, d => broadcast({ type: 'share', user: userOf(d.user) }));
   on(WebcastEvent.GIFT, d => {

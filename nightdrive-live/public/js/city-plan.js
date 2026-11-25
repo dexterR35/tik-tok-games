@@ -71,6 +71,7 @@ export function planCityCell(cx,cz){
       const x=swap?k:17,z=swap?17:k;
       box('metal',x,3.7,z,.12,7.4,.12);box('metal',swap?x:x-1.7,7.4,swap?z-1.7:z,swap?.12:3.4,.10,swap?3.4:.12);
       box('lamp',swap?x:x-3.3,7.35,swap?z-3.3:z,swap?.48:.75,.12,swap?.75:.48);
+      box('lampPool',swap?x:x-4.2,.045,swap?z-4.2:z,15,.01,15);
       if(k%84===42)tree(swap?k+9:23,swap?23:k+9,4.5+r());
       box('metal',swap?k+10:20,.38,swap?20:k+10,swap?2.7:.65,.12,swap?.65:2.7);
       box('bench',swap?k+10:20,.68,swap?20:k+10,swap?2.7:.65,.12,swap?.65:2.7);

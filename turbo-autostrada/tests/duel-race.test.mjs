@@ -7,8 +7,10 @@ import { newProject } from '../public/garage/model.js';
 import { createDuel, advanceDuel, tapDuel, giftDuel, duelResult } from '../duel-race.js';
 import { LiveEngine } from '../live-engine.js';
 function finish(duel,taps=false){for(let i=0;i<4000&&!(duel.player.finished&&duel.rival.finished);i++){if(taps&&i%10===0)tapDuel(duel,3);advanceDuel(duel,.02,0);}assert.equal(duel.player.finished,true);assert.equal(duel.rival.finished,true);return duelResult(duel);}
-test('rival pace is exactly plus or minus 5% of the independent unboosted reference',()=>{
- for(const [mode,factor] of [['easier',.95],['harder',1.05]]){const d=createDuel(newProject(),1,mode);advanceDuel(d,4,0);assert.ok(Math.abs(d.rival.speed/d.reference.speed-factor)<1e-10);assert.ok(Math.abs(d.rival.distance/d.reference.distance-factor)<1e-10);}
+test('rival base pace is exactly plus or minus 5% of the independent unboosted reference',()=>{
+ for(const [mode,factor] of [['easier',.95],['harder',1.05]]){const d=createDuel(newProject(),1,mode);advanceDuel(d,4,0);assert.ok(Math.abs(d.rival.baseDistance/d.reference.distance-factor)<1e-10);
+  // close racing only shifts the rival by a few metres around that pace
+  assert.ok(Math.abs(d.rival.distance-d.rival.baseDistance)<8);}
  assert.equal(createDuel(newProject(),1).rival.factor,1.05);assert.equal(createDuel(newProject(),2).rival.factor,.95);
 });
 test('without audience assistance the faster rival wins and the slower rival loses',()=>{
@@ -52,4 +54,20 @@ test('the new coupe loads with separate panels and an open engine bay beneath it
  const ray=new THREE.Raycaster(new THREE.Vector3(-1.55,2,0),new THREE.Vector3(0,-1,0));
  assert.ok(ray.intersectObject(hood).some(hit=>hit.point.y>1),'closed bonnet covers the engine bay');
  assert.equal(ray.intersectObject(shell).some(hit=>hit.point.y>1.1),false,'opening the bonnet exposes the engine above the inner wheel arch');
+});
+
+test('close racing: without help the rival never runs away and never falls far behind',()=>{
+ for(const mode of ['harder','easier']){const d=createDuel(newProject(),1,mode);let worst=0;
+  for(let i=0;i<4000&&!(d.player.finished||d.rival.finished);i++){advanceDuel(d,.02,0);worst=Math.max(worst,Math.abs(d.player.distance-d.rival.distance));}
+  assert.ok(worst<9,`${mode}: gap reached ${worst.toFixed(1)} m`);}
+});
+test('the rival chases audience help late and with less, so the crew still wins but the finish stays close',()=>{
+ const d=createDuel(newProject(),1,'harder');let led=false,maxLead=0;
+ for(let i=0;i<4000&&!(d.player.finished&&d.rival.finished);i++){if(i%10===0)tapDuel(d,3);advanceDuel(d,.02,0);
+  if(!d.player.finished){const lead=d.player.distance-d.rival.distance;maxLead=Math.max(maxLead,lead);if(lead>.5)led=true;
+   if(d.rival.extra>0)assert.ok(d.rival.distance<=d.player.distance-.6+1e-9,'chasing never puts the rival in front');}}
+ const r=duelResult(d);assert.equal(led,true);assert.equal(r.won,true);assert.ok(r.margin<.3,`margin ${r.margin}`);assert.ok(maxLead<20);
+ // a huge gift: a clear lead first, then the rival claws back
+ const g=createDuel(newProject(),1,'easier');advanceDuel(g,6,0);giftDuel(g,500*50);let peak=0,atLine=null;for(let i=0;i<4000&&!(g.player.finished&&g.rival.finished);i++){advanceDuel(g,.02,0);if(!g.player.finished)peak=Math.max(peak,g.player.distance-g.rival.distance);else atLine??=g.player.distance-g.rival.distance;}
+ const end=duelResult(g);assert.equal(end.won,true);assert.ok(peak>8);assert.ok(atLine<peak*.75,`rival closed in before the line (${atLine?.toFixed(1)} of ${peak.toFixed(1)} m)`);
 });

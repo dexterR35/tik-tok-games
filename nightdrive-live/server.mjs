@@ -54,15 +54,18 @@ app.post('/api/disconnect',(req,res)=>{disconnect();res.json({ok:true});});
 // Stateless Streamable HTTP MCP with JSON responses, usable by local MCP clients.
 const mcpTools=[
   {name:'get_drive_state',description:'Read live interactions and latest game telemetry. telemetryAgeMs indicates freshness.',inputSchema:{type:'object',properties:{},additionalProperties:false}},
-  {name:'set_drive_mode',description:'Change autonomous driving pace while preserving the safety controller.',inputSchema:{type:'object',properties:{mode:{type:'string',enum:['safe','fast','hardcore']}},required:['mode'],additionalProperties:false}},
+  {name:'set_drive_mode',description:'Change autonomous driving pace while preserving the safety controller. auto picks a pace from road, traffic and daylight; superfast reaches ~290 km/h on open highway.',inputSchema:{type:'object',properties:{mode:{type:'string',enum:['auto','safe','fast','hardcore','superfast']}},required:['mode'],additionalProperties:false}},
   {name:'set_drive_route',description:'Choose the kind of future route generated beyond the current planned section.',inputSchema:{type:'object',properties:{route:{type:'string',enum:['mixed','highway','city']}},required:['route'],additionalProperties:false}},
+  {name:'set_camera',description:'Broadcast camera: auto (director alternates behind-the-car and isometric, isometric for turns), chase (close behind), high (high chase), or iso (isometric 45° view from above).',inputSchema:{type:'object',properties:{camera:{type:'string',enum:['auto','chase','high','iso']}},required:['camera'],additionalProperties:false}},
+  {name:'set_car',description:'Choose the autodrive car: veloce (VELOCE R supercar) or atlas (Atlas S4 touring sedan). Traffic is unchanged.',inputSchema:{type:'object',properties:{car:{type:'string',enum:['veloce','atlas']}},required:['car'],additionalProperties:false}},
+  {name:'set_time_of_day',description:'Lighting source: real follows the local clock (sunrise, sunset, night); day or night force a look.',inputSchema:{type:'object',properties:{clock:{type:'string',enum:['real','day','night']}},required:['clock'],additionalProperties:false}},
   {name:'trigger_boost',description:'Grant a timed boost. Traffic and red-light braking stay active.',inputSchema:{type:'object',properties:{seconds:{type:'number',minimum:1,maximum:30}},required:['seconds'],additionalProperties:false}},
 ];
 app.post('/mcp',(req,res)=>{
   const {id,method,params}=req.body||{};
   if(id===undefined)return res.sendStatus(202);
   let result;
-  if(method==='initialize')result={protocolVersion:'2025-03-26',capabilities:{tools:{listChanged:false}},serverInfo:{name:'autodrive-local',version:'2.0.0'}};
+  if(method==='initialize')result={protocolVersion:'2025-03-26',capabilities:{tools:{listChanged:false}},serverInfo:{name:'autodrive-local',version:'3.0.0'}};
   else if(method==='ping')result={};
   else if(method==='tools/list')result={tools:mcpTools};
   else if(method==='tools/call'){
@@ -70,6 +73,9 @@ app.post('/mcp',(req,res)=>{
       if(params.name==='get_drive_state')output=state.snapshot();
       else if(params.name==='set_drive_mode')output=publish('mode',args).state;
       else if(params.name==='set_drive_route')output=publish('route',args).state;
+      else if(params.name==='set_camera')output=publish('camera',args).state;
+      else if(params.name==='set_car')output=publish('car',args).state;
+      else if(params.name==='set_time_of_day')output=publish('clock',args).state;
       else if(params.name==='trigger_boost'){if(!Number.isFinite(args.seconds)||args.seconds<1||args.seconds>30)throw new Error('seconds must be between 1 and 30');output=publish('boost',args).state;}
       else throw new Error('Unknown tool');
       result={content:[{type:'text',text:JSON.stringify(output)}]};

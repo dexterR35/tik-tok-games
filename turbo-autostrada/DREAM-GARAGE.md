@@ -4,6 +4,11 @@
 
 Use Window Capture in TikTok LIVE Studio, or use `http://127.0.0.1:3210/?source=1` as an OBS browser source at **1080 × 1920**. The source URL hides all mouse-revealed host buttons. Press **F** for fullscreen in the app window.
 
+## Screenshot
+
+<img src="../docs/screenshots/dream-garage-live.jpg" alt="Dream Garage community project car and automatic duel results" width="420">
+
+
 ## Actual game loop
 
 1. **Build / 35 seconds:** workshop income and viewer gifts fund real upgrades. A part delivery animates onto the screen and installs on the 3D car automatically. No host shopping clicks are needed.

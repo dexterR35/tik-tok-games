@@ -2,7 +2,7 @@ import http from 'node:http';
 import { readFile, stat, mkdir, writeFile, rename } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { Room } from './public/room.js';
+import { Room, cleanAvatar } from './public/room.js';
 import { openGameWindow } from './game-window.js';
 
 const project = fileURLToPath(new URL('./', import.meta.url));
@@ -11,7 +11,7 @@ const dataDir = process.env.PRISM_DATA_DIR || path.join(project, 'data');
 const port = Number(process.env.PORT || 4328);
 await mkdir(dataDir, { recursive: true });
 let saved;
-try { const data = JSON.parse(await readFile(path.join(dataDir, 'session.json'), 'utf8')); if (data.version === 1) saved = data; } catch {}
+try { const data = JSON.parse(await readFile(path.join(dataDir, 'session.json'), 'utf8')); if ([1, 2, 3].includes(data.version)) saved = data; } catch {}
 const room = new Room({ saved });
 const streams = new Set();
 let relay, generation = 0, retry, timeout, writes = Promise.resolve(), stopping = false;
@@ -31,10 +31,7 @@ function disconnect(preserve = false) {
 }
 function connect() {
   disconnect(true); const mine = generation;
-  room.settings.demo = false; room.settings.reconnect = true;
-  room.queue = room.queue.filter(a => a.source === 'live');
-  for (const [id, p] of room.users) if (p.source !== 'live') room.users.delete(id);
-  room.ranking = null;
+  room.prepareLive(); room.settings.reconnect = true;
   room.live = { state: 'connecting', live: false, username: '', text: 'Connecting to TikTok relay…' }; save();
   try { relay = new WebSocket(room.settings.relayUrl); }
   catch (e) { room.live = { ...room.live, state: 'error', text: e.message }; return; }
@@ -51,6 +48,25 @@ function connect() {
     retry = setTimeout(connect, 5000);
   };
 }
+// Viewer photos: the relay sends TikTok CDN links. Browsers cannot draw
+// cross-origin photos into WebGL, so this server fetches them (TikTok image
+// hosts only, https, no redirects, images up to 500 KB, 400 cached).
+const avatars = new Map();
+async function avatar(res, id) {
+  const url = cleanAvatar(room.users.get(id)?.avatar);
+  if (!url) { res.writeHead(404, { 'Cache-Control': 'no-store' }); return res.end(); }
+  try {
+    let hit = avatars.get(url);
+    if (!hit) {
+      const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, redirect: 'error', signal: AbortSignal.timeout(8000) });
+      const type = r.headers.get('content-type') || '';
+      if (!r.ok || !/^image\/(jpeg|png|webp|gif)/.test(type) || Number(r.headers.get('content-length') || 0) > 5e5) throw Error('bad image');
+      const body = Buffer.from(await r.arrayBuffer()); if (body.length > 5e5) throw Error('too large');
+      hit = { type, body }; if (avatars.size >= 400) avatars.delete(avatars.keys().next().value); avatars.set(url, hit);
+    }
+    res.writeHead(200, { 'Content-Type': hit.type, 'Cache-Control': 'max-age=3600', 'X-Content-Type-Options': 'nosniff' }); res.end(hit.body);
+  } catch { res.writeHead(502, { 'Cache-Control': 'no-store' }); res.end(); }
+}
 const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.txt': 'text/plain; charset=utf-8' };
 const json = (res, status, value) => { res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(value)); };
 const server = http.createServer(async (req, res) => {
@@ -59,8 +75,9 @@ const server = http.createServer(async (req, res) => {
   if (req.headers.origin && !hosts.some(host => req.headers.origin === `http://${host}`)) return json(res, 403, { error: 'Cross-origin command blocked' });
   try {
     const url = new URL(req.url, `http://localhost:${port}`);
-    if (req.method === 'GET' && url.pathname === '/api/health') return json(res, 200, { ok: true, game: 'prism-rush', version: 1, release: '1.1.0' });
+    if (req.method === 'GET' && url.pathname === '/api/health') return json(res, 200, { ok: true, game: 'prism-rush', version: 1, release: '3.0.0' });
     if (req.method === 'GET' && url.pathname === '/api/state') return json(res, 200, room.snapshot());
+    if (req.method === 'GET' && url.pathname === '/api/avatar') return avatar(res, String(url.searchParams.get('id') || ''));
     if (req.method === 'GET' && url.pathname === '/api/events') {
       res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache, no-transform', Connection: 'keep-alive', 'X-Accel-Buffering': 'no' });
       res.write(`data: ${JSON.stringify(room.snapshot())}\n\n`); streams.add(res);

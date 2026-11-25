@@ -2,6 +2,11 @@
 
 Launch **DREAM-GARAGE.bat**, or run `npm run garage` and open **http://127.0.0.1:3210**. The independent server listens only on this computer and does not start a TikTok connection. The existing racing game and LIVE configuration remain separate.
 
+## Screenshot
+
+<img src="../docs/screenshots/dream-garage-workshop.jpg" alt="Dream Garage workshop sandbox with car upgrades and community contributions" width="680">
+
+
 ## The game loop
 
 Choose a car, fit parts, dial in a setup, test it, earn credits and reputation, and save a named build to the community showroom. The starter Kaze and 2,600 credits are included. Buy a Vanta for 8,000 or an Atlas for 14,000. Switching projects preserves their setups.

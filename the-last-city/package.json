@@ -1,0 +1,15 @@
+{
+  "name": "the-last-city",
+  "version": "1.0.0",
+  "description": "Zombie-wave city defense for TikTok LIVE: every viewer becomes a survivor",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "express": "5.1.0",
+    "tiktok-live-connector": "2.5.0"
+  },
+  "type": "module",
+  "private": true
+}

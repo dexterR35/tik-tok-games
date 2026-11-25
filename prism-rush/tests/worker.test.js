@@ -16,10 +16,10 @@ test('standalone simulation worker handles state, batched taps, exact results, s
   await until(m=>m.type==='ready'); worker.postMessage({type:'init'});
   const first=await until(m=>m.type==='state'); assert.equal(first.state.board.length,56);
   const command=async(id,command)=>{worker.postMessage({type:'command',id,command});return until(m=>m.type==='reply'&&m.id===id);};
-  await command(1,{action:'demo',value:false}); await command(2,{action:'auto',value:false});
+  await command(1,{action:'demo',value:false}); await command(2,{action:'pause'}); await command(5,{action:'pause'});
   assert.equal((await command(3,{action:'tap',count:100,name:'Worker Viewer'})).ok,true);
   const result=await until(m=>m.type==='state'&&m.state.lastResult?.name==='Worker Viewer');
-  assert.equal(result.state.lastResult.points,result.state.lastResult.predicted); assert.equal(result.state.tapCharge,0);
+  assert.equal(result.state.lastResult.points,result.state.lastResult.predicted); assert.equal(result.state.taps.received,100); assert.equal(result.state.taps.played+result.state.taps.pending,100);
   const save=await until(m=>m.type==='save'&&m.saved.users.some(p=>p.name==='Worker Viewer')); assert.equal(save.saved.engine.board.length,56);
   const forbidden=await command(4,{action:'connect',url:'ws://localhost:3000/ws'}); assert.match(forbidden.error,/local edition/);
 });

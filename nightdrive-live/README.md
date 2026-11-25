@@ -2,6 +2,29 @@
 
 An autonomous open-city driving game for a 9:16 TikTok LIVE broadcast, built with Three.js and a local Node.js bridge. Version 2 uses an original matte Atlas S4, varied original traffic models, a detailed district map and interpolated motion.
 
+## Screenshot
+
+<img src="../docs/screenshots/autodrive-live.jpg" alt="Autodrive supercar following curved city roads with GPS radar" width="420">
+
+
+## What's new in v3.1 — curved city, GTA-style radar, indicators
+
+- **The roads are no longer ruler-straight.** The whole city is drawn through one smooth bend of the map (`public/js/warp.js`): avenues and cross streets snake left and right (swing of tens of metres, tightest bend ≈ 300 m), junction corners meet at varying angles and buildings follow the street line. The driving simulation itself is unchanged (exact lanes, signals and collision checks), and the bend never folds, so what does not touch in the simulation never touches on screen. Cars, camera, sun/shadows, light pools and the minimap all use the same warp. Long flat pieces (roads, pavements, kerbs, markings, rails) are cut into 12 m tiles so they bend smoothly.
+- **GTA-style radar.** The minimap turns with the car (heading-up), shows the curved streets, a purple GPS route, a white player arrow, an N marker on the edge, traffic-light dots, traffic blips (amber when a car is indicating) and two bars under it (green = pace, blue = boost). The world map (**M**) uses the same curved streets, north-up.
+- **Indicators and keep-right.** When the autodrive car is in the second or third lane and the first lane (rightmost) is free and not slower, it **indicates right for ~1.5 s, re-checks the gap, then moves back to the first lane** ("SIGNALLING RIGHT" → "KEEPING RIGHT"). Overtakes also indicate first (0.45–0.75 s). Amber indicator lamps blink at 1.4 Hz on the front corner, mirror and rear of VELOCE R and Atlas S4; the HUD shows green ◀ ▶ arrows like a dashboard. Traffic cars blink while changing lanes and indicate before keeping right.
+
+## What's new in v3
+
+- **Auto camera director (default).** Alternates the behind-the-car chase view and the isometric view with a short dip-to-black cut: about 16 s behind the car, about 11 s isometric, and it switches to isometric early when a turn is coming so the corner is seen from above. Choose Auto, Chase, High or Isometric in the control room.
+- **Isometric camera.** A third camera: a true orthographic isometric view (35.26° from above, 45° to the road) like a classic isometric city game. It turns in 90° steps at corners, sits over the oncoming lanes so buildings rarely hide the car, and zooms out with speed. Switch it in the control room (05 Camera), with **C**, or by double-clicking the game. MCP: `set_camera` with `{"camera":"auto"}`, `"chase"`, `"high"`, or `"iso"`.
+
+- **VELOCE R supercar for the autodrive car.** An original, unbranded mid-engine supercar (racing red, twin stripes, rear wing, forged wheels, yellow calipers, clearcoat paint with reflections). Two car cards in the control room switch the autodrive car between VELOCE R and Atlas S4; traffic is unchanged. MCP: `set_car` with `{"car":"veloce"}` or `"atlas"`.
+
+- **Day and night by the real clock.** The sun position is computed from the computer's clock (NOAA solar equations, 45°N and the timezone's longitude by default). Sunrise, sunset, twilight colours, stars, moon, lit windows, glowing shopfronts, street-lamp light pools, headlights and taillights all follow it. The control room's **Time of day** switch can preview Day or Night for everyone; **Real clock** is the default. `?time=21:30` previews a time in one view; `?lat=44.43&lon=26.1` sets an exact location.
+- **Super fast mode** (up to ~290 km/h on open highway) and **Auto pilot** (default), which picks the pace from road type, traffic and daylight and switches into Super fast on clear highway with a "SUPER FAST MODE ACTIVATED" banner.
+- **Better tap-tap speed.** Every like adds boost immediately (0.05 s per tap, 100 taps = 5 s). Tapping fast builds a combo (×1.25, ×1.5, ×2) that multiplies the boost time and raises boost top speed. **T** sends test taps.
+- **Avoid, don't collide.** Traffic now changes lanes smoothly, keeps right, and gives way to the fast autodrive approaching from behind. Forward sensing reaches 640 m; desired speed never exceeds what can be stopped within it. Tests check body overlap for the autodrive and for every pair of traffic cars.
+
 ## Start on Windows
 
 Double-click `START-AUTODRIVE.bat` (the previous launcher also works), or run:
@@ -20,11 +43,13 @@ In OBS, create a Browser Source using the portrait URL, width **1080**, height *
 
 ## Controls and interactions
 
+- **Auto pilot (default):** chooses Safe, Fast, Hardcore or Super fast automatically. At night in the city it drives safe.
 - **Safe drive:** lower target speeds and longer following distances.
 - **Fast lane:** faster cruise and more assertive safe-gap overtakes.
-- **Hardcore:** highest target speeds and tighter headway, with the same collision and red-light constraints.
+- **Hardcore:** high target speeds and tighter headway, with the same collision and red-light constraints.
+- **Super fast:** ~290 km/h highway cruise, quicker lane changes and long-range overtaking, with the same collision and red-light constraints.
 - **Explore / Highway / City:** replans beyond the current visible section. The chosen road type begins after approximately 500–800 m; nearby traffic and the current road remain continuous. Turns are selected randomly from valid north/east/west grid connections, without U-turns or self-intersections. The city is fictional, not GPS data.
-- **Tap tap:** test 10 likes. Every 100 likes grants five seconds of boost.
+- **Tap tap:** test 10 likes. Every like boosts instantly; fast tapping builds a combo up to ×2.
 - **Rose / Turbo:** test five- and fifteen-second boosts. These buttons simulate events; they do not purchase or send TikTok gifts.
 - **Space:** test a turbo boost. **C** or double-click the game: switch camera height.
 - **M** or click the minimap: open the world map. Its +/− controls zoom the map; **Escape** closes it. Districts, canal cells, traffic signals, current location and the planned route use the same world coordinates as the 3D scene.
@@ -59,7 +84,8 @@ The fictional districts are **Riverside**, **Old Quarter**, **Central Heights**,
 | `vehicles.js` | Original matte vehicle geometry and instancing templates |
 | `city-plan.js` / `city-worker.js` | Deterministic district generation off the render thread |
 | `city.js` | Materials, textures and streamed GPU instances |
-| `navigation.js` | Minimap and zoomable world map |
+| `navigation.js` | GTA-style heading-up radar and zoomable world map |
+| `warp.js` / `warp-shader.js` | Curved-city bend: one smooth map used by JS (cars, camera, radar) and by every shader |
 
 The optional `/?qa=turn` URL starts a local visual check before the first city bend with traffic spawning disabled. Normal studio and broadcast URLs use the full game. Render telemetry includes FPS, frame time, draw calls, geometry counts and render CPU time; this is diagnostic data, not a guarantee for every machine or capture setup.
 
@@ -70,7 +96,10 @@ Stateless HTTP MCP, protocol `2025-03-26`, JSON responses at `http://localhost:4
 | Tool | Arguments |
 | --- | --- |
 | `get_drive_state` | `{}` |
-| `set_drive_mode` | `{"mode":"safe"}`, `"fast"`, or `"hardcore"` |
+| `set_drive_mode` | `{"mode":"auto"}`, `"safe"`, `"fast"`, `"hardcore"`, or `"superfast"` |
+| `set_camera` | `{"camera":"auto"}`, `"chase"`, `"high"`, or `"iso"` |
+| `set_car` | `{"car":"veloce"}` or `"atlas"` |
+| `set_time_of_day` | `{"clock":"real"}`, `"day"`, or `"night"` |
 | `set_drive_route` | `{"route":"mixed"}`, `"highway"`, or `"city"` |
 | `trigger_boost` | `{"seconds":15}`; range 1–30 |
 
@@ -82,6 +111,6 @@ This endpoint is available for you to add to an MCP client; no global client set
 npm test
 ```
 
-Ten tests cover 50 km of route sampling/pruning, ten simulated minutes per driving mode with repeated boosts and both lane-distance and world-space oriented-body collision checks, continuous turn headings, forward motion through offset corners, consistent physics at 30/60/144 Hz, non-overlapping road slabs, red-light braking, gift streak deduplication, boost timers, HTTP modules, WebSocket events, MCP controls and origin rejection.
+Seventeen tests cover the curved-city warp (no folds, real bends, exact shader phases far from the start), indicate-then-keep-right for the autodrive and traffic, overtakes that indicate before moving, super-fast highway driving (pace judged over three seeds) with traffic lane changes, real-clock sun positions, 50 km of route sampling/pruning, ten simulated minutes per driving mode with repeated boosts and both lane-distance and world-space oriented-body collision checks, continuous turn headings, forward motion through offset corners, consistent physics at 30/60/144 Hz, non-overlapping road slabs, red-light braking, gift streak deduplication, boost timers, HTTP modules, WebSocket events, MCP controls and origin rejection.
 
 Original asset details: [public/assets/CREDITS.md](public/assets/CREDITS.md). Interface fonts use Google Fonts with system fallbacks; game geometry and textures are local. The retired imported car and its attribution are archived in `artifacts/` and are not served by the game.

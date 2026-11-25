@@ -2,6 +2,11 @@
 
 A 9:16 community racing game for TikTok LIVE. One crowd-powered car races three automatic rivals. Four distinct detailed models are included: Ferrari 458, Porsche 911 GT3, Lamborghini Aventador SVJ and Bugatti Chiron Profilée. All retain matte finishes, with no bloom, light halos or wet-road glare.
 
+## Screenshot
+
+<img src="../docs/screenshots/nightshift-racing.jpg" alt="Crowd-powered street racing and host garage controls" width="680">
+
+
 ## Start on Windows
 
 Double-click **START-NIGHTSHIFT.bat**. Keep its terminal open while playing. The browser opens after the server is ready.
